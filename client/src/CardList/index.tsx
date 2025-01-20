@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import HabitEntry from './HabitEntry'
+import CardEntry from './CardEntry'
 import {
   closestCorners,
   DndContext,
@@ -20,7 +20,7 @@ import {
   sortableKeyboardCoordinates
 } from '@dnd-kit/sortable'
 
-const HabitList = () => {
+const CardList = () => {
   const [habits, setHabits] = useState([
     { id: 1, name: 'put the fries in the bag' },
     { id: 2, name: 'start dropshipping' },
@@ -61,11 +61,11 @@ const HabitList = () => {
         strategy={verticalListSortingStrategy}
       >
         {habits.map((entry) => (
-          <HabitEntry key={entry.id} id={entry.id} name={entry.name}/>
+          <CardEntry key={entry.id} id={entry.id} name={entry.name}/>
         ))}
       </SortableContext>
     </DndContext>
   )
 }
 
-export default HabitList
+export default CardList

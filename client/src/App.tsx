@@ -1,8 +1,8 @@
-import HabitList from './HabitList'
+import CardList from './CardList'
 
 const App = () => {
   return (
-    < HabitList/>
+    <CardList/>
   )
 }
 
