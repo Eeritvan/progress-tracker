@@ -1,5 +1,6 @@
 // import ReadyButton from './ReadyButton'
 // import HabitInfo from './HabitInfo'
+import SingleDay from './SingleDay'
 
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -31,7 +32,8 @@ const HabitEntry = ({ id, name }) => {
       { name }
       <div className='grid grid-cols-26 grid-rows-7 gap-1'>
         {[...Array(182)].map((_, i) => (
-          <div key={i} className='bg-white/30 aspect-square h-4' />
+          <SingleDay key={i}/>
+          // <div key={i} className='bg-white/30 aspect-square h-4' />
         ))}
       </div>
     </div>
