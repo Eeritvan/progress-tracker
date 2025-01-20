@@ -3,7 +3,6 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
-import pluginQuery from '@tanstack/eslint-plugin-query'
 import reactCompiler from 'eslint-plugin-react-compiler'
 import reactPlugin from 'eslint-plugin-react'
 
@@ -32,7 +31,6 @@ export default tseslint.config(
       'react': reactPlugin,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      '@tanstack/query': pluginQuery,
       'react-compiler': reactCompiler,
     },
     settings: {

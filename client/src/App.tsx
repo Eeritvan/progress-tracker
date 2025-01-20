@@ -1,8 +1,8 @@
+import HabitList from './HabitList'
+
 const App = () => {
   return (
-    <>
-      test
-    </>
+    < HabitList/>
   )
 }
 
