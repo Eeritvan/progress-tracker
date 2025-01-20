@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import CardEntry from './CardEntry'
+import useCardsSlice, { Card } from '../store/cardStore'
 import {
   closestCorners,
   DndContext,
@@ -21,11 +22,8 @@ import {
 } from '@dnd-kit/sortable'
 
 const CardList = () => {
-  const [habits, setHabits] = useState([
-    { id: 1, name: 'put the fries in the bag' },
-    { id: 2, name: 'start dropshipping' },
-    { id: 3, name: 'yolo lifesavings into memecoins' }
-  ])
+  const cards = useCardsSlice((state) => state.cards)
+  const setCardsOrder = useCardsSlice((state) => state.setCardsOrder)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -41,13 +39,12 @@ const CardList = () => {
     const { active, over } = event
 
     if (over && active.id !== over.id) {
-      setHabits((events) => {
-        const oldIndex = events.findIndex(item => item.id === active.id)
-        const newIndex = events.findIndex(item => item.id === over.id)
-        return arrayMove(events, oldIndex, newIndex)
-      })
+      const oldIndex = cards.findIndex((card: Card) => card.id === active.id)
+      const newIndex = cards.findIndex((card: Card) => card.id === over.id)
+      const newCards = arrayMove(cards, oldIndex, newIndex)
+      setCardsOrder(newCards)
     }
-  }, [])
+  }, [cards, setCardsOrder])
 
   return (
     <DndContext
@@ -57,11 +54,11 @@ const CardList = () => {
       modifiers={[restrictToVerticalAxis, restrictToParentElement]}
     >
       <SortableContext
-        items={habits}
+        items={cards}
         strategy={verticalListSortingStrategy}
       >
-        {habits.map((entry) => (
-          <CardEntry key={entry.id} id={entry.id} name={entry.name}/>
+        {cards.map((card: Card) => (
+          <CardEntry key={card.id} id={card.id} name={card.name}/>
         ))}
       </SortableContext>
     </DndContext>
