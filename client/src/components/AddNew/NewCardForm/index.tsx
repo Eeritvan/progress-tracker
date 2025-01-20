@@ -1,6 +1,8 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import useCardsSlice, { Card } from '../../../store/cardStore'
+import Button from './Button'
+import FormField from './FormField'
 import {
   object,
   pipe,
@@ -55,14 +57,24 @@ const NewCardform = () => {
       className='w-[600px] bg-red-300 rounded-xl p-2'
       onSubmit={handleSubmit(onSubmit)}
     >
-      <input type='text' {...register('title')} placeholder='title' />
-      {errors.title && <p>{errors.title?.message}</p>}
-      <input type='text' {...register('desc')} placeholder='description' />
-      {errors.desc && <p>{errors.desc?.message}</p>}
-      <button type='submit' disabled={isSubmitting}>
-        submit
-      </button>
-      {errors.root && <p>{errors.root?.message}</p>}
+      <FormField
+        type = 'text'
+        error = {errors.title?.message}
+        register = {register}
+        name = 'title'
+        placeholder = 'title'
+      />
+      <FormField
+        type = 'text'
+        error = {errors.desc?.message}
+        register = {register}
+        name = 'desc'
+        placeholder = 'description'
+      />
+      <Button
+        isSubmitting={isSubmitting}
+        error={errors.root?.message}
+      />
     </form>
   )
 }
