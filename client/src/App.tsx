@@ -1,23 +1,10 @@
 import CardList from './CardList'
-import useCardsSlice, { Card } from './store/cardStore'
-
-const addNew = (addNewCard) => {
-  const newCard: Card = {
-    id: 5,
-    name: 'test'
-  }
-
-  addNewCard(newCard)
-}
+import AddNew from './AddNew'
 
 const App = () => {
-  const addNewCard = useCardsSlice((state) => state.addNewCard)
-
   return (
     <>
-      <button onClick={() => addNew(addNewCard)}>
-        add-new
-      </button>
+      <AddNew />
       <CardList/>
     </>
   )

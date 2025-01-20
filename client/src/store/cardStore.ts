@@ -3,6 +3,7 @@ import { create } from 'zustand'
 export interface Card {
   id: number
   name: string
+  desc?: string
 }
 
 const useCardsSlice = create((set) => ({
