@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import CardEntry from './CardEntry'
-import useCardsSlice, { Card } from '../store/cardStore'
+import useCardsSlice, { Card } from '../../store/cardStore'
 import {
   closestCorners,
   DndContext,

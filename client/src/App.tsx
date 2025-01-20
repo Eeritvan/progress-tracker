@@ -1,5 +1,5 @@
-import CardList from './CardList'
-import AddNew from './AddNew'
+import CardList from './components/CardList'
+import AddNew from './components/AddNew'
 
 const App = () => {
   return (
