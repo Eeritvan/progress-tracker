@@ -2,7 +2,7 @@
 import ReadyButton from './ReadyButton'
 import CardInfo from './CardInfo'
 import SingleDay from './SingleDay'
-import useCardsSlice from '../../../store/cardStore'
+import useCardListSlice from '../../../store/cardListStore'
 import { ControlledMenu, MenuItem } from '@szhsin/react-menu'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -11,7 +11,7 @@ import { useState } from 'react'
 const CardEntry = ({ id, name }: { id: string; name: string }) => {
   const [isOpen, setOpen] = useState(false)
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 })
-  const deleteCard = useCardsSlice((state) => state.deleteCard)
+  const deleteCard = useCardListSlice((state) => state.deleteCard)
 
   const {
     attributes,

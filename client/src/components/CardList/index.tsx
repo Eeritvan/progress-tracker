@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import CardEntry from './CardEntry'
-import useCardsSlice, { Card } from '../../store/cardStore'
+import useCardListSlice, { Card } from '../../store/cardListStore'
 import {
   closestCorners,
   DndContext,
@@ -22,8 +22,8 @@ import {
 } from '@dnd-kit/sortable'
 
 const CardList = () => {
-  const cards = useCardsSlice((state) => state.cards)
-  const setCardsOrder = useCardsSlice((state) => state.setCardsOrder)
+  const cards = useCardListSlice((state) => state.cards)
+  const setCardsOrder = useCardListSlice((state) => state.setCardsOrder)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

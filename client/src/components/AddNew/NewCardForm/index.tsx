@@ -1,6 +1,6 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
-import useCardsSlice, { Card } from '../../../store/cardStore'
+import useCardsSlice, { Card } from '../../../store/cardListStore'
 import Button from './Button'
 import FormField from './FormField'
 import {

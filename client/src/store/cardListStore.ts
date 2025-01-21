@@ -6,7 +6,7 @@ export interface Card {
   desc?: string
 }
 
-const useCardsSlice = create((set) => ({
+const useCardListSlice = create((set) => ({
   cards: [],
   setCardsOrder: (cards: Card[]) => set({ cards }),
   addNewCard: (card: Card) =>
@@ -20,4 +20,4 @@ const useCardsSlice = create((set) => ({
   resetCards: () => set(() => ({ cards: [] }))
 }))
 
-export default useCardsSlice
+export default useCardListSlice
