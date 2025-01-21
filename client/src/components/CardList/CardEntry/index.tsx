@@ -1,11 +1,18 @@
+/* eslint-disable react/jsx-no-bind */
 import ReadyButton from './ReadyButton'
 import CardInfo from './CardInfo'
 import SingleDay from './SingleDay'
-
+import useCardsSlice from '../../../store/cardStore'
+import { ControlledMenu, MenuItem } from '@szhsin/react-menu'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useState } from 'react'
 
 const CardEntry = ({ id, name }: { id: string; name: string }) => {
+  const [isOpen, setOpen] = useState(false)
+  const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 })
+  const deleteCard = useCardsSlice((state) => state.deleteCard)
+
   const {
     attributes,
     listeners,
@@ -49,6 +56,14 @@ const CardEntry = ({ id, name }: { id: string; name: string }) => {
       {...attributes}
       {...listeners}
       style={style}
+      onContextMenu={(e) => {
+        if (typeof document.hasFocus === 'function' && !document.hasFocus()) {
+          return
+        }
+        e.preventDefault()
+        setAnchorPoint({ x: e.clientX, y: e.clientY })
+        setOpen(true)
+      }}
     >
       <div className='flex justify-between items-center mb-2'>
         <CardInfo name={ name }/>
@@ -59,6 +74,14 @@ const CardEntry = ({ id, name }: { id: string; name: string }) => {
           <SingleDay key={i} date={date}/>
         ))}
       </div>
+      <ControlledMenu
+        anchorPoint={anchorPoint}
+        state={isOpen ? 'open' : 'closed'}
+        direction="right"
+        onClose={() => setOpen(false)}
+      >
+        <MenuItem onClick={() => deleteCard(id)}>Delete</MenuItem>
+      </ControlledMenu>
     </div>
   )
 }

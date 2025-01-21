@@ -13,6 +13,10 @@ const useCardsSlice = create((set) => ({
     set((state) => ({
       cards: [card, ...state.cards]
     })),
+  deleteCard: (id: number) =>
+    set((state) => ({
+      cards: state.cards.filter((card) => card.id !== id)
+    })),
   resetCards: () => set(() => ({ cards: [] }))
 }))
 
