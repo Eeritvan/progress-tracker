@@ -2,13 +2,13 @@
 import ReadyButton from './ReadyButton'
 import CardInfo from './CardInfo'
 import SingleDay from './SingleDay'
-import useCardListSlice from '../../../store/cardListStore'
+import useCardListSlice, { Card } from '../../../store/cardListStore'
 import { ControlledMenu, MenuItem } from '@szhsin/react-menu'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useState } from 'react'
 
-const CardEntry = ({ id, name }: { id: string; name: string }) => {
+const CardEntry = ({ id, name, completedDays, color, icon }: Card) => {
   const [isOpen, setOpen] = useState(false)
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 })
   const deleteCard = useCardListSlice((state) => state.deleteCard)
@@ -49,6 +49,8 @@ const CardEntry = ({ id, name }: { id: string; name: string }) => {
     return dates
   }
 
+  // console.log(generateDates())
+
   return (
     <div
       className='w-[600px] bg-red-300 rounded-xl p-2'
@@ -71,7 +73,15 @@ const CardEntry = ({ id, name }: { id: string; name: string }) => {
       </div>
       <div className='grid grid-cols-26 grid-rows-7 gap-1 grid-flow-col'>
         {generateDates().map((date, i) => (
-          <SingleDay key={i} date={date}/>
+          <SingleDay
+            key={i}
+            date={date}
+            completed={completedDays.some(completedDate =>
+              completedDate.getFullYear() === date.getFullYear() &&
+              completedDate.getMonth() === date.getMonth() &&
+              completedDate.getDate() === date.getDate()
+            )}
+          />
         ))}
       </div>
       <ControlledMenu

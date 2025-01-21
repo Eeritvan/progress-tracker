@@ -58,7 +58,7 @@ const CardList = () => {
         strategy={verticalListSortingStrategy}
       >
         {cards.map((card: Card) => (
-          <CardEntry key={card.id} id={card.id} name={card.name}/>
+          <CardEntry {...card} key={card.id} />
         ))}
       </SortableContext>
     </DndContext>

@@ -1,7 +1,9 @@
-const SingleDay = (date) => {
+const SingleDay = ({ date, completed }) => {
   return (
-    <button className='bg-white/30 aspect-square h-4 rounded-sm
-    hover:bg-white/60' onClick={() => console.log(date)}
+    <button
+      className={`aspect-square h-4 rounded-sm 
+        ${completed ? 'bg-red-400' : 'bg-red-400/50'}`}
+      onClick={() => console.log(date)}
     />
   )
 }

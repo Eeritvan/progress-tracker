@@ -43,7 +43,10 @@ const NewCardform = () => {
       const newCard: Card = {
         id,
         name: data.title,
-        desc: data.desc
+        desc: data.desc,
+        completedDays: [],
+        color: 'red',
+        icon: undefined
       }
       setId(id + 1)
       addNewCard(newCard)
