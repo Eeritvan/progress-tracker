@@ -69,7 +69,6 @@ export default tseslint.config(
       'react/prefer-stateless-function': ['error'],
       'react/no-multi-comp': ['error'],
       'react/sort-comp': ['error'],
-      'react/jsx-no-bind': ['error'],
       'react/self-closing-comp': ['error'],
       'react/jsx-wrap-multilines': ['error']
     }

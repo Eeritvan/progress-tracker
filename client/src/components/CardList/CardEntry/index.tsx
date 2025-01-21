@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
 import ReadyButton from './ReadyButton'
 import CardInfo from './CardInfo'
 import SingleDay from './SingleDay'
@@ -49,11 +48,9 @@ const CardEntry = ({ id, name, completedDays, color, icon }: Card) => {
     return dates
   }
 
-  // console.log(generateDates())
-
   return (
     <div
-      className='w-[600px] bg-red-300 rounded-xl p-2'
+      className='w-[600px] bg-gray-300 rounded-xl p-2'
       ref={ setNodeRef }
       {...attributes}
       {...listeners}

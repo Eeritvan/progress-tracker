@@ -6,7 +6,7 @@ const AddNew = () => {
   const [visible, setVisible] = useState(false)
 
   return (
-    <>
+    <div>
       <button
         className='flex justify-center items-center bg-green-500 aspect-square
         h-14 rounded-xl'
@@ -14,8 +14,9 @@ const AddNew = () => {
       >
         <Plus />
       </button>
+
       {visible && <NewCardform />}
-    </>
+    </div>
   )
 }
 
