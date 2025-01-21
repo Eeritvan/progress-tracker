@@ -66,13 +66,13 @@ const CardEntry = ({ id, name, completedDays, color, icon }: Card) => {
     >
       <div className='flex justify-between items-center mb-2'>
         <CardInfo name={ name }/>
-        <ReadyButton />
+        <ReadyButton id={ id } />
       </div>
       <div className='grid grid-cols-26 grid-rows-7 gap-1 grid-flow-col'>
         {generateDates().map((date, i) => (
           <SingleDay
-            key={i}
-            date={date}
+            key={ i }
+            date={ date }
             completed={completedDays.some(completedDate =>
               completedDate.getFullYear() === date.getFullYear() &&
               completedDate.getMonth() === date.getMonth() &&
