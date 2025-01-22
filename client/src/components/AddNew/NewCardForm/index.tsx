@@ -1,26 +1,32 @@
+import Button from './Button'
+import FormField from './FormField'
+import ColorSelector from './ColorSelector'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import useCardsSlice, { Card } from '../../../store/cardListStore'
-import Button from './Button'
-import FormField from './FormField'
 import {
   object,
   pipe,
   string,
-  optional,
   minLength,
+  picklist,
   InferInput
 } from 'valibot'
 import { useState } from 'react'
+
+const colors = ['blue', 'red', 'green'] as const
 
 const newCardSchema = object({
   title: pipe(
     string('title is required'),
     minLength(3, 'Needs to be at least 3 characters')
   ),
-  desc: optional(pipe(
+  desc: pipe(
     string('description is required')
-  ))
+  ),
+  color: pipe(
+    picklist(colors, 'Please select your color.')
+  )
 })
 
 type CardData = InferInput<typeof newCardSchema>
@@ -45,7 +51,7 @@ const NewCardform = () => {
         name: data.title,
         desc: data.desc,
         completedDays: [],
-        color: 'red',
+        color: data.color,
         icon: undefined
       }
       setId(id + 1)
@@ -73,6 +79,10 @@ const NewCardform = () => {
         register = {register}
         name = 'desc'
         placeholder = 'description'
+      />
+      <ColorSelector
+        register={register}
+        error={errors.color?.message}
       />
       <Button
         isSubmitting={isSubmitting}
