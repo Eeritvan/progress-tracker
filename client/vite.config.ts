@@ -3,6 +3,7 @@ import { defineConfig, type PluginOption } from 'vite'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
 const ReactCompilerConfig = { target: '18' }
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,7 +15,8 @@ export default defineConfig({
         ]
       }
     }) as PluginOption,
-    visualizer({ open: true }) as PluginOption
+    visualizer({ open: true }) as PluginOption,
+    tailwindcss()
   ],
   resolve: {
     alias: {
