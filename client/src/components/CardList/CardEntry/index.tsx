@@ -6,6 +6,7 @@ import { ControlledMenu, MenuItem } from '@szhsin/react-menu'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useState } from 'react'
+import { generateDates } from '../../../utils/generateDays'
 
 const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
   const [isOpen, setOpen] = useState(false)
@@ -23,29 +24,6 @@ const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
   const style = {
     transition,
     transform: CSS.Transform.toString(transform)
-  }
-
-  const generateDates = () => {
-    const dates = []
-    const today = new Date()
-
-    const startDate = new Date(today)
-    const emptyDaysAtStart = (
-      new Date(startDate.setDate(startDate.getDate() - 181)).getDay() + 6) % 7
-
-    for (let i = 181-(7-emptyDaysAtStart); i >= 0; i--) {
-      const date = new Date(today)
-      date.setDate(today.getDate() - i)
-      dates.push(date)
-    }
-
-    for (let i = 1; i <= 7-emptyDaysAtStart; i++) {
-      const date = new Date(today)
-      date.setDate(today.getDate() + i)
-      dates.push(date)
-    }
-
-    return dates
   }
 
   return (

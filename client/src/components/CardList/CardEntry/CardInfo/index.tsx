@@ -16,7 +16,7 @@ const CardInfo = ({ icon, name, desc }: CardInfoProps) => {
   return (
     <div className='grid grid-cols-2 grid-rows-2 gap-1'>
       <div className='flex justify-center items-center row-span-2 bg-amber-600
-        aspect-square rounded-xl'
+        aspect-square rounded-xl h-14'
       >
         <IconComponent size={24} />
       </div>
