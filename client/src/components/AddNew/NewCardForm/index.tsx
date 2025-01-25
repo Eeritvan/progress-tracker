@@ -4,14 +4,7 @@ import ColorSelector from './ColorSelector'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import useCardsSlice, { Card } from '../../../store/cardListStore'
-import {
-  object,
-  pipe,
-  string,
-  minLength,
-  picklist,
-  InferInput
-} from 'valibot'
+import { object, pipe, string, minLength, picklist, InferInput } from 'valibot'
 import { useState } from 'react'
 import IconSelector from './IconSelector'
 
@@ -57,7 +50,7 @@ const NewCardform = () => {
         desc: data.desc,
         completedDays: [],
         color: data.color,
-        icon: undefined
+        icon: data.icon
       }
       setId(id + 1)
       addNewCard(newCard)

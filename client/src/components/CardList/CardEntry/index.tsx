@@ -7,7 +7,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useState } from 'react'
 
-const CardEntry = ({ id, name, completedDays, color, icon }: Card) => {
+const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
   const [isOpen, setOpen] = useState(false)
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 })
   const deleteCard = useCardListSlice((state) => state.deleteCard)
@@ -65,7 +65,7 @@ const CardEntry = ({ id, name, completedDays, color, icon }: Card) => {
       }}
     >
       <div className='flex justify-between items-center mb-2'>
-        <CardInfo name={ name } />
+        <CardInfo icon={ icon } name={ name } desc={desc} />
         <ReadyButton id={ id } color={color} />
       </div>
       <div className='grid grid-cols-26 grid-rows-7 gap-1 grid-flow-col'>

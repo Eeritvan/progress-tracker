@@ -6,7 +6,7 @@ export interface Card {
   desc?: string
   completedDays: Date[]
   color: 'blue' | 'red' | 'green'
-  icon: undefined
+  icon: 'Book' | 'Code' | 'Tent-tree' | 'School'
 }
 
 interface CardListState {

@@ -1,7 +1,31 @@
-const CardInfo = ({ name }) => {
+import { Book, Code, TentTree, School } from 'lucide-react'
+import { Card } from '../../../../store/cardListStore'
+
+const iconComponents = {
+  'Book': Book,
+  'Code': Code,
+  'Tent-tree': TentTree,
+  'School': School
+}
+
+type CardInfoProps = Omit<Card, 'id' | 'completedDays' | 'color'>
+
+const CardInfo = ({ icon, name, desc }: CardInfoProps) => {
+  const IconComponent = iconComponents[icon]
+
   return (
-    <div>
-      { name }
+    <div className='grid grid-cols-2 grid-rows-2 gap-1'>
+      <div className='flex justify-center items-center row-span-2 bg-amber-600
+        aspect-square rounded-xl'
+      >
+        <IconComponent size={24} />
+      </div>
+      <>
+        { name }
+      </>
+      <div className='col-start-2'>
+        { desc }
+      </div>
     </div>
   )
 }
