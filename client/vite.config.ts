@@ -1,5 +1,5 @@
 import path from 'path'
-import { defineConfig } from 'vite'
+import { defineConfig, type PluginOption } from 'vite'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
 const ReactCompilerConfig = { target: '18' }
@@ -13,8 +13,8 @@ export default defineConfig({
           ['babel-plugin-react-compiler', ReactCompilerConfig]
         ]
       }
-    }),
-    visualizer({ open: true })
+    }) as PluginOption,
+    visualizer({ open: true }) as PluginOption
   ],
   resolve: {
     alias: {
