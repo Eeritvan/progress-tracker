@@ -13,8 +13,10 @@ import {
   InferInput
 } from 'valibot'
 import { useState } from 'react'
+import IconSelector from './IconSelector'
 
 const colors = ['blue', 'red', 'green'] as const
+const icons = ['Book', 'Code', 'Tent-tree', 'School'] as const
 
 const newCardSchema = object({
   title: pipe(
@@ -26,6 +28,9 @@ const newCardSchema = object({
   ),
   color: pipe(
     picklist(colors, 'Please select your color.')
+  ),
+  icon: pipe(
+    picklist(icons, 'Please select your icon.')
   )
 })
 
@@ -82,7 +87,13 @@ const NewCardform = () => {
       />
       <ColorSelector
         register={register}
+        colors={colors}
         error={errors.color?.message}
+      />
+      <IconSelector
+        register={register}
+        icons={icons}
+        error={errors.icon?.message}
       />
       <Button
         isSubmitting={isSubmitting}

@@ -1,39 +1,28 @@
 interface ColorSelectorProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  register: any;
-  error?: string;
+  register: any
+  error?: string
+  colors: readonly ['blue', 'red', 'green']
 }
 
-const ColorSelector = ({ register, error }: ColorSelectorProps) => {
+const ColorSelector = ({ register, error, colors }: ColorSelectorProps) => {
   return (
-    <div>
-      <div>
-        <input
-          type='radio'
-          id='blue'
-          value='blue'
-          {...register('color')}
-        />
-        <label htmlFor='blue'>blue</label>
-
-        <input
-          type='radio'
-          id='red'
-          value='red'
-          {...register('color')}
-        />
-        <label htmlFor='red'>red</label>
-
-        <input
-          type='radio'
-          id='green'
-          value='green'
-          {...register('color')}
-        />
-        <label htmlFor='green'>green</label>
+    <>
+      <div className='flex'>
+        {colors.map(color => (
+          <div key={color}>
+            <input
+              type='radio'
+              id={color}
+              value={color}
+              {...register('color')}
+            />
+            <label htmlFor={color}>{color}</label>
+          </div>
+        ))}
       </div>
       {error && <span className="text-red-500 text-sm">{error}</span>}
-    </div>
+    </>
   )
 }
 
