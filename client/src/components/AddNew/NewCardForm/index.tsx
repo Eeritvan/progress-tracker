@@ -48,7 +48,7 @@ const NewCardform = () => {
         id,
         name: data.title,
         desc: data.desc,
-        completedDays: [],
+        completedDays: new Set<string>(),
         color: data.color,
         icon: data.icon
       }

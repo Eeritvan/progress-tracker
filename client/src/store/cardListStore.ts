@@ -4,7 +4,7 @@ export interface Card {
   id: number
   name: string
   desc?: string
-  completedDays: Date[]
+  completedDays: Set<string>
   color: 'blue' | 'red' | 'green'
   icon: 'Book' | 'Code' | 'Tent-tree' | 'School'
 }
@@ -33,7 +33,12 @@ const useCardListSlice = create<CardListState>((set) => ({
     set((state) => ({
       cards: state.cards.map(card =>
         card.id === id
-          ? { ...card, completedDays: [...card.completedDays, new Date()] }
+          ? {
+            ...card,
+            completedDays: new Set(
+              [...card.completedDays, new Date().toISOString().split('T')[0]]
+            )
+          }
           : card
       )
     })),

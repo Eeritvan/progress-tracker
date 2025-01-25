@@ -1,6 +1,6 @@
 const SingleDay = ({
   date, completed, color
-}: { date: Date; completed: boolean; color: string }) => {
+}: { date: string; completed: boolean; color: string }) => {
   return (
     <button
       className='aspect-square h-4 rounded-sm'
@@ -9,7 +9,7 @@ const SingleDay = ({
         opacity: completed ? 1 : 0.5
       }}
       // eslint-disable-next-line no-console
-      onClick={() => console.log(date, color)}
+      onClick={() => console.log(date)}
     />
   )
 }

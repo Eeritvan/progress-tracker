@@ -52,11 +52,7 @@ const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
             key={ i }
             date={ date }
             color={color}
-            completed={completedDays.some(completedDate =>
-              completedDate.getFullYear() === date.getFullYear() &&
-              completedDate.getMonth() === date.getMonth() &&
-              completedDate.getDate() === date.getDate()
-            )}
+            completed={completedDays.has(date)}
           />
         ))}
       </div>
