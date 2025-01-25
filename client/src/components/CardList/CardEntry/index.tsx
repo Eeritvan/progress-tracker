@@ -1,18 +1,16 @@
 import ReadyButton from './ReadyButton'
 import CardInfo from './CardInfo'
 import SingleDay from './SingleDay'
-import useCardListSlice, { Card } from '../../../store/cardListStore'
-import { ControlledMenu, MenuItem } from '@szhsin/react-menu'
+import { Card } from '../../../store/cardListStore'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useState } from 'react'
 import { generateDates } from '../../../utils/generateDays'
+import ControlMenu from './ControlMenu'
+import { useState } from 'react'
 
 const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
   const [isOpen, setOpen] = useState(false)
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 })
-  const deleteCard = useCardListSlice((state) => state.deleteCard)
-
   const {
     attributes,
     listeners,
@@ -43,27 +41,25 @@ const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
       }}
     >
       <div className='flex justify-between items-center mb-2'>
-        <CardInfo icon={ icon } name={ name } desc={desc} />
-        <ReadyButton id={ id } color={color} />
+        <CardInfo icon={ icon } name={ name } desc={ desc } />
+        <ReadyButton id={ id } color={ color } />
       </div>
       <div className='grid grid-cols-26 grid-rows-7 gap-1 grid-flow-col'>
-        {generateDates().map((date, i) => (
+        {generateDates().map((date, index) => (
           <SingleDay
-            key={ i }
+            key={ index }
             date={ date }
-            color={color}
+            color={ color }
             completed={completedDays.has(date)}
           />
         ))}
       </div>
-      <ControlledMenu
+      <ControlMenu
+        id={id}
+        isOpen={isOpen}
+        setOpen={setOpen}
         anchorPoint={anchorPoint}
-        state={isOpen ? 'open' : 'closed'}
-        direction="right"
-        onClose={() => setOpen(false)}
-      >
-        <MenuItem onClick={() => deleteCard(id)}>Delete</MenuItem>
-      </ControlledMenu>
+      />
     </div>
   )
 }

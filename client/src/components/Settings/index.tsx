@@ -15,7 +15,7 @@ const Settings = () => {
       </button>
       {visible && (
         <div className='fixed inset-0 bg-gray-500 h-3/4 w-3/4 top-1/2 left-1/2
-          -translate-x-1/2 -translate-y-1/2'
+          -translate-x-1/2 -translate-y-1/2 z-10'
         >
           gg
         </div>

@@ -4,7 +4,15 @@ import ColorSelector from './ColorSelector'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import useCardsSlice, { Card } from '../../../store/cardListStore'
-import { object, pipe, string, minLength, picklist, InferInput } from 'valibot'
+import {
+  object,
+  pipe,
+  string,
+  minLength,
+  picklist,
+  InferInput,
+  optional
+} from 'valibot'
 import { useState } from 'react'
 import IconSelector from './IconSelector'
 
@@ -16,9 +24,9 @@ const newCardSchema = object({
     string('title is required'),
     minLength(3, 'Needs to be at least 3 characters')
   ),
-  desc: pipe(
+  desc: optional(pipe(
     string('description is required')
-  ),
+  )),
   color: pipe(
     picklist(colors, 'Please select your color.')
   ),

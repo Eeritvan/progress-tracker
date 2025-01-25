@@ -2,7 +2,7 @@ import { Check } from 'lucide-react'
 import useCardListSlice from '../../../../store/cardListStore'
 
 const ReadyButton = ({ id, color }: { id: number, color: string }) => {
-  const completeDay = useCardListSlice((state) => state.completeDay)
+  const toggleDay = useCardListSlice((state) => state.toggleDay)
 
   return (
     <button
@@ -11,7 +11,7 @@ const ReadyButton = ({ id, color }: { id: number, color: string }) => {
       style={{
         backgroundColor: color
       }}
-      onClick={() => completeDay(id)}
+      onClick={() => toggleDay(id)}
     >
       <Check />
     </button>

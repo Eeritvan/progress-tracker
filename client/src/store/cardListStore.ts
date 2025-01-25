@@ -14,7 +14,7 @@ interface CardListState {
   setCardsOrder: (cards: Card[]) => void
   addNewCard: (card: Card) => void
   deleteCard: (id: number) => void
-  completeDay: (id: number) => void
+  toggleDay: (id: number) => void
   resetCards: () => void
 }
 
@@ -29,18 +29,25 @@ const useCardListSlice = create<CardListState>((set) => ({
     set((state) => ({
       cards: state.cards.filter((card) => card.id !== id)
     })),
-  completeDay: (id: number) =>
+  toggleDay: (id: number) =>
     set((state) => ({
-      cards: state.cards.map(card =>
-        card.id === id
-          ? {
-            ...card,
-            completedDays: new Set(
-              [...card.completedDays, new Date().toISOString().split('T')[0]]
-            )
-          }
-          : card
-      )
+      cards: state.cards.map(card => {
+        if (card.id !== id) return card
+
+        const today = new Date().toISOString().split('T')[0]
+        const completedDays = new Set(card.completedDays)
+
+        if (completedDays.has(today)) {
+          completedDays.delete(today)
+        } else {
+          completedDays.add(today)
+        }
+
+        return {
+          ...card,
+          completedDays
+        }
+      })
     })),
   resetCards: () => set(() => ({ cards: [] }))
 }))
