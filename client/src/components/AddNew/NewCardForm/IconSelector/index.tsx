@@ -1,4 +1,16 @@
-import { Book, Code, TentTree, School } from 'lucide-react'
+import {
+  Book,
+  Code,
+  TentTree,
+  School,
+  AlarmClock,
+  Brush,
+  CalendarDays,
+  Gamepad2,
+  NotebookPen,
+  Coffee,
+  Wallet
+} from 'lucide-react'
 import { ICONS } from '@/utils/constants'
 
 interface IconSelectorProps {
@@ -11,7 +23,14 @@ const iconComponents = {
   'Book': Book,
   'Code': Code,
   'TentTree': TentTree,
-  'School': School
+  'School': School,
+  'AlarmClock': AlarmClock,
+  'Brush': Brush,
+  'CalendarDays': CalendarDays,
+  'Gamepad2': Gamepad2,
+  'NotebookPen': NotebookPen,
+  'Coffee': Coffee,
+  'Wallet': Wallet
 }
 
 const IconSelector = ({ register, error }: IconSelectorProps) => {
@@ -27,9 +46,11 @@ const IconSelector = ({ register, error }: IconSelectorProps) => {
                 id={icon}
                 value={icon}
                 {...register('icon')}
+                className='appearance-none bg-iconbg aspect-square rounded-lg
+                  m-1 h-7 checked:bg-neutral-50'
               />
-              <label htmlFor={icon}>
-                <IconComponent size={24} />
+              <label htmlFor={icon} className="absolute -translate-x-7 translate-y-1.5">
+                <IconComponent size={20} />
               </label>
             </div>
           )

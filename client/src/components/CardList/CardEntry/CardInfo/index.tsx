@@ -1,11 +1,30 @@
-import { Book, Code, TentTree, School } from 'lucide-react'
+import {
+  Book,
+  Code,
+  TentTree,
+  School,
+  AlarmClock,
+  Brush,
+  CalendarDays,
+  Gamepad2,
+  NotebookPen,
+  Coffee,
+  Wallet
+} from 'lucide-react'
 import { Card } from '@/store/cardListStore'
 
 const iconComponents = {
   'Book': Book,
   'Code': Code,
   'TentTree': TentTree,
-  'School': School
+  'School': School,
+  'AlarmClock': AlarmClock,
+  'Brush': Brush,
+  'CalendarDays': CalendarDays,
+  'Gamepad2': Gamepad2,
+  'NotebookPen': NotebookPen,
+  'Coffee': Coffee,
+  'Wallet': Wallet
 }
 
 type CardInfoProps = Omit<Card, 'id' | 'completedDays' | 'color'>

@@ -20,7 +20,14 @@ export const ICONS = [
   'Book',
   'Code',
   'TentTree',
-  'School'
+  'School',
+  'AlarmClock',
+  'Brush',
+  'CalendarDays',
+  'Gamepad2',
+  'NotebookPen',
+  'Coffee',
+  'Wallet'
 ] as const
 
 export const THEMES = [
