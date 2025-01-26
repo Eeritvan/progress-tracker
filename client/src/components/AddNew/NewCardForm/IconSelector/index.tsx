@@ -1,5 +1,5 @@
 import { Book, Code, TentTree, School } from 'lucide-react'
-import { ICONS } from '../../../../utils/constants'
+import { ICONS } from '@/utils/constants'
 
 interface IconSelectorProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

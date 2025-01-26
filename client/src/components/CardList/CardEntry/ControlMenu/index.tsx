@@ -1,5 +1,5 @@
 import { ControlledMenu, MenuItem } from '@szhsin/react-menu'
-import useCardListSlice from '../../../../store/cardListStore'
+import useCardListSlice from '@/store/cardListStore'
 
 interface ControlMenuProps {
   id: number

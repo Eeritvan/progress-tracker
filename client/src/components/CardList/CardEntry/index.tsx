@@ -1,10 +1,10 @@
 import ReadyButton from './ReadyButton'
 import CardInfo from './CardInfo'
 import SingleDay from './SingleDay'
-import { Card } from '../../../store/cardListStore'
+import { Card } from '@/store/cardListStore'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { generateDates } from '../../../utils/generateDays'
+import { generateDates } from '@/utils/generateDays'
 import ControlMenu from './ControlMenu'
 import { useState } from 'react'
 

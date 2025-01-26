@@ -1,5 +1,5 @@
-import { THEMES } from '../../../utils/constants'
-import { useLocalStorage } from '../../../hooks/useLocalStorage'
+import { THEMES } from '@/utils/constants'
+import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { useQueryClient } from '@tanstack/react-query'
 
 const ThemeSelector = () => {

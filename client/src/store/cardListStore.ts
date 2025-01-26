@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { COLORS, ICONS } from '../utils/constants'
+import { COLORS, ICONS } from '@/utils/constants'
 
 export interface Card {
   id: number

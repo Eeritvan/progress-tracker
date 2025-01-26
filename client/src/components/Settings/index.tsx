@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Settings as SettingsIcon } from 'lucide-react'
 import ThemeSelector from './ThemeSelector'
+import Reset from './Reset'
+import LogOut from './LogOut'
 
 const Settings = () => {
   const [visible, setVisible] = useState(false)
@@ -19,6 +21,8 @@ const Settings = () => {
           -translate-x-1/2 -translate-y-1/2 z-10'
         >
           <ThemeSelector />
+          <Reset />
+          <LogOut />
         </div>
       )}
     </>

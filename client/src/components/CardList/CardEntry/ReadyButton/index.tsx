@@ -1,6 +1,6 @@
 import { Check } from 'lucide-react'
-import useCardListSlice from '../../../../store/cardListStore'
-import { COLORS } from '../../../../utils/constants'
+import useCardListSlice from '@/store/cardListStore'
+import { COLORS } from '@/utils/constants'
 
 const ReadyButton = (
   { id, color }: { id: number, color: (typeof COLORS)[number] }

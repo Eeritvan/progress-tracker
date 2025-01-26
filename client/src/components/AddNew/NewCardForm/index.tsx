@@ -3,7 +3,7 @@ import FormField from './FormField'
 import ColorSelector from './ColorSelector'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
-import useCardsSlice, { Card } from '../../../store/cardListStore'
+import useCardsSlice, { Card } from '@/store/cardListStore'
 import {
   object,
   pipe,

@@ -1,4 +1,4 @@
-import { COLORS } from '../../../../utils/constants'
+import { COLORS } from '@/utils/constants'
 
 interface ColorSelectorProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

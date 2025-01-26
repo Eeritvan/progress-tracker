@@ -1,5 +1,5 @@
 import { Book, Code, TentTree, School } from 'lucide-react'
-import { Card } from '../../../../store/cardListStore'
+import { Card } from '@/store/cardListStore'
 
 const iconComponents = {
   'Book': Book,
