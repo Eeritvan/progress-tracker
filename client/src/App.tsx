@@ -25,11 +25,9 @@ const App = () => {
   })
 
   return (
-    <div className='bg-background min-h-screen'>
-      <div className='flex'>
-        <Settings />
-        <AddNew />
-      </div>
+    <div className='flex flex-col items-center bg-background min-h-screen'>
+      <Settings />
+      <AddNew />
       <CardList/>
     </div>
   )

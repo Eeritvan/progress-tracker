@@ -47,21 +47,23 @@ const CardList = () => {
   }, [cards, setCardsOrder])
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragEnd={handleDragEnd}
-      modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-    >
-      <SortableContext
-        items={cards}
-        strategy={verticalListSortingStrategy}
+    <div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis, restrictToParentElement]}
       >
-        {cards.map((card: Card) => (
-          <CardEntry {...card} key={card.id} />
-        ))}
-      </SortableContext>
-    </DndContext>
+        <SortableContext
+          items={cards}
+          strategy={verticalListSortingStrategy}
+        >
+          {cards.map((card: Card) => (
+            <CardEntry {...card} key={card.id} />
+          ))}
+        </SortableContext>
+      </DndContext>
+    </div>
   )
 }
 

@@ -26,7 +26,7 @@ const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
 
   return (
     <div
-      className='w-[600px] bg-cardbg rounded-xl p-2'
+      className='w-[600px] bg-cardbg rounded-xl p-2 m-1'
       ref={ setNodeRef }
       {...attributes}
       {...listeners}
