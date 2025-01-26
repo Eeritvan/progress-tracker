@@ -15,9 +15,7 @@ import {
 } from 'valibot'
 import { useState } from 'react'
 import IconSelector from './IconSelector'
-
-const colors = ['blue', 'red', 'green'] as const
-const icons = ['Book', 'Code', 'Tent-tree', 'School'] as const
+import { COLORS, ICONS } from '../../../utils/constants'
 
 const newCardSchema = object({
   title: pipe(
@@ -28,10 +26,10 @@ const newCardSchema = object({
     string('description is required')
   )),
   color: pipe(
-    picklist(colors, 'Please select your color.')
+    picklist(COLORS, 'Please select your color.')
   ),
   icon: pipe(
-    picklist(icons, 'Please select your icon.')
+    picklist(ICONS, 'Please select your icon.')
   )
 })
 
@@ -63,7 +61,7 @@ const NewCardform = () => {
       setId(id + 1)
       addNewCard(newCard)
     } catch (error) {
-      setError('root', { message: error as unknown as string })
+      setError('root', { message: error as string })
     }
   }
 
@@ -88,12 +86,10 @@ const NewCardform = () => {
       />
       <ColorSelector
         register={register}
-        colors={colors}
         error={errors.color?.message}
       />
       <IconSelector
         register={register}
-        icons={icons}
         error={errors.icon?.message}
       />
       <Button

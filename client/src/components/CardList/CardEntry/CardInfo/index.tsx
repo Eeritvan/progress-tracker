@@ -4,7 +4,7 @@ import { Card } from '../../../../store/cardListStore'
 const iconComponents = {
   'Book': Book,
   'Code': Code,
-  'Tent-tree': TentTree,
+  'TentTree': TentTree,
   'School': School
 }
 
@@ -21,10 +21,10 @@ const CardInfo = ({ icon, name, desc }: CardInfoProps) => {
         <IconComponent size={24} />
       </div>
       <>
-        { name }
+        {name}
       </>
       <div className='col-start-2'>
-        { desc }
+        {desc}
       </div>
     </div>
   )

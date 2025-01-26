@@ -1,24 +1,24 @@
 import { Book, Code, TentTree, School } from 'lucide-react'
+import { ICONS } from '../../../../utils/constants'
 
 interface IconSelectorProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register: any
   error?: string
-  icons: readonly ['Book', 'Code', 'Tent-tree', 'School']
 }
 
 const iconComponents = {
   'Book': Book,
   'Code': Code,
-  'Tent-tree': TentTree,
+  'TentTree': TentTree,
   'School': School
 }
 
-const IconSelector = ({ register, error, icons }: IconSelectorProps) => {
+const IconSelector = ({ register, error }: IconSelectorProps) => {
   return (
     <>
       <div className='flex'>
-        {icons.map(icon => {
+        {ICONS.map(icon => {
           const IconComponent = iconComponents[icon]
           return (
             <div key={icon}>

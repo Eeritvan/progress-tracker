@@ -41,15 +41,15 @@ const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
       }}
     >
       <div className='flex justify-between items-center mb-2'>
-        <CardInfo icon={ icon } name={ name } desc={ desc } />
-        <ReadyButton id={ id } color={ color } />
+        <CardInfo icon={icon} name={name} desc={desc} />
+        <ReadyButton id={id} color={color} />
       </div>
       <div className='grid grid-cols-26 grid-rows-7 gap-1 grid-flow-col'>
         {generateDates().map((date, index) => (
           <SingleDay
-            key={ index }
-            date={ date }
-            color={ color }
+            key={index}
+            date={date}
+            color={color}
             completed={completedDays.has(date)}
           />
         ))}

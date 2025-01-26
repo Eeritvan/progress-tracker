@@ -1,12 +1,13 @@
 import { create } from 'zustand'
+import { COLORS, ICONS } from '../utils/constants'
 
 export interface Card {
   id: number
   name: string
   desc?: string
   completedDays: Set<string>
-  color: 'blue' | 'red' | 'green'
-  icon: 'Book' | 'Code' | 'Tent-tree' | 'School'
+  color: (typeof COLORS)[number]
+  icon: (typeof ICONS)[number]
 }
 
 interface CardListState {

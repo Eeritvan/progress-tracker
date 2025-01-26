@@ -1,15 +1,16 @@
+import { COLORS } from '../../../../utils/constants'
+
 interface ColorSelectorProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register: any
   error?: string
-  colors: readonly ['blue', 'red', 'green']
 }
 
-const ColorSelector = ({ register, error, colors }: ColorSelectorProps) => {
+const ColorSelector = ({ register, error }: ColorSelectorProps) => {
   return (
     <>
       <div className='flex'>
-        {colors.map(color => (
+        {COLORS.map(color => (
           <div key={color}>
             <input
               type='radio'
