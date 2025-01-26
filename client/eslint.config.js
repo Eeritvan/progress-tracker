@@ -5,10 +5,12 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import reactCompiler from 'eslint-plugin-react-compiler'
 import reactPlugin from 'eslint-plugin-react'
+import pluginQuery from '@tanstack/eslint-plugin-query'
 
 export default tseslint.config(
   tseslint.configs.strict,
   tseslint.configs.stylistic,
+  ...pluginQuery.configs['flat/recommended'],
   { ignores: ['dist', 'src/components/ui'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],

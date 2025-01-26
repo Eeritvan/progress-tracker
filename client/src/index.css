@@ -1,5 +1,32 @@
 @import "tailwindcss";
 
+@theme {
+    --color-background: var(--theme-color-background);
+    --color-cardbg: var(--theme-color-cardbg);
+    --color-iconbg: var(--theme-color-iconbg);
+    --color-buttonbg: var(--theme-color-buttonbg);
+}
+
+@layer themes {
+    :root, [data-theme=light] {
+        --color-background: var(--color-neutral-100);
+        --color-cardbg: var(--color-neutral-400);
+        --color-iconbg: var(--color-neutral-500);
+        --color-buttonbg: var(--color-green-500);
+    }
+
+    [data-theme=dark] {
+        --color-background: var(--color-neutral-900);
+        --color-cardbg: var(--color-neutral-800);
+        --color-iconbg: var(--color-neutral-700);
+        --color-buttonbg: var(--color-amber-700);
+    }
+}
+
+* {
+    @apply transition-colors duration-200 ease-in-out;
+}
+
 @layer utilities {
     .no-scrollbar::-webkit-scrollbar {
         display: none;

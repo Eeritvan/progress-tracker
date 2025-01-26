@@ -11,3 +11,9 @@ export const ICONS = [
   'TentTree',
   'School'
 ] as const
+
+export const THEMES = [
+  'system',
+  'light',
+  'dark'
+] as const

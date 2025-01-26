@@ -8,7 +8,7 @@ const AddNew = () => {
   return (
     <div>
       <button
-        className='flex justify-center items-center bg-green-500 aspect-square
+        className='flex justify-center items-center bg-buttonbg aspect-square
         h-14 rounded-xl'
         onClick={() => setVisible(!visible)}
       >

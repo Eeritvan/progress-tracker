@@ -9,8 +9,7 @@ const ReadyButton = (
 
   return (
     <button
-      className='flex items-center justify-center bg-blue-400 h-14 rounded-xl
-        aspect-square hover:bg-blue-600'
+      className='flex items-center justify-center h-14 rounded-xl aspect-square'
       style={{ backgroundColor: color }}
       onClick={() => toggleDay(id)}
     >
