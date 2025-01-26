@@ -1,8 +1,19 @@
 export const COLORS = [
-  'blue',
-  'red',
-  'green',
-  'yellow'
+  'darkseagreen',
+  'lightgreen',
+  'mediumaquamarine',
+  'greenyellow',
+  'aqua',
+  'paleturquoise',
+  'skyblue',
+  'teal',
+  'slateblue',
+  'plum',
+  'pink',
+  'hotpink',
+  'fuchsia',
+  'tomato',
+  'orangered'
 ] as const
 
 export const ICONS = [

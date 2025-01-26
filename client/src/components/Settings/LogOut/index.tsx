@@ -1,8 +1,7 @@
 const LogOut = () => {
   return (
-    <div>
-      #todo
-    </div>
+    <>
+    </>
   )
 }
 

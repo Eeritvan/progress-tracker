@@ -16,9 +16,15 @@ const ColorSelector = ({ register, error }: ColorSelectorProps) => {
               type='radio'
               id={color}
               value={color}
+              className='appearance-none aspect-square rounded-lg m-1 h-7
+                relative checked:before:absolute checked:before:w-3
+                checked:before:h-3 checked:before:bg-black
+                checked:before:rounded checked:before:top-1/2
+                checked:before:left-1/2 checked:before:-translate-x-1/2
+                checked:before:-translate-y-1/2'
+              style={{ background: color }}
               {...register('color')}
             />
-            <label htmlFor={color}>{color}</label>
           </div>
         ))}
       </div>
