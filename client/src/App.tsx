@@ -4,12 +4,14 @@ import { useQuery } from '@tanstack/react-query'
 import TopBar from './components/TopBar'
 
 const App = () => {
-  const { getItem } = useLocalStorage('theme')
+  const { setItem, getItem } = useLocalStorage('theme')
   const selectedTheme = getItem()
 
   useQuery({
     queryKey: ['theme', selectedTheme],
     queryFn: () => {
+      if (!selectedTheme)
+        setItem('system')
       const theme = selectedTheme === 'system'
         ? window.matchMedia('(prefers-color-scheme: dark)').matches
           ? 'dark' : 'light' : selectedTheme
