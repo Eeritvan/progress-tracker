@@ -26,7 +26,7 @@ const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
 
   return (
     <div
-      className='w-[600px] bg-cardbg rounded-xl p-2 m-1'
+      className='w-[600px] bg-cardbg rounded-xl p-2 m-2'
       ref={ setNodeRef }
       {...attributes}
       {...listeners}
@@ -40,11 +40,11 @@ const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
         setOpen(true)
       }}
     >
-      <div className='flex justify-between items-center mb-2'>
+      <div className='flex mb-2'>
         <CardInfo icon={icon} name={name} desc={desc} />
         <ReadyButton id={id} color={color} />
       </div>
-      <div className='grid grid-cols-26 grid-rows-7 gap-1 grid-flow-col'>
+      <div className='grid grid-rows-7 gap-1 grid-flow-col'>
         {generateDates().map((date, index) => (
           <SingleDay
             key={index}

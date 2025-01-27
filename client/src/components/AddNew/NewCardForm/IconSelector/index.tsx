@@ -49,14 +49,17 @@ const IconSelector = ({ register, error }: IconSelectorProps) => {
                 className='appearance-none bg-iconbg aspect-square rounded-lg
                   m-1 h-7 checked:bg-neutral-50'
               />
-              <label htmlFor={icon} className="absolute -translate-x-7 translate-y-1.5">
+              <label
+                htmlFor={icon}
+                className='absolute -translate-x-7 translate-y-1.5'
+              >
                 <IconComponent size={20} />
               </label>
             </div>
           )
         })}
       </div>
-      {error && <span className="text-red-500 text-sm">{error}</span>}
+      {error && <span className='text-red-500 text-sm'>{error}</span>}
     </>
   )
 }

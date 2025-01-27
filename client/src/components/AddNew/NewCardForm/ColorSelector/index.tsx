@@ -28,7 +28,7 @@ const ColorSelector = ({ register, error }: ColorSelectorProps) => {
           </div>
         ))}
       </div>
-      {error && <span className="text-red-500 text-sm">{error}</span>}
+      {error && <span className='text-red-500 text-sm'>{error}</span>}
     </>
   )
 }

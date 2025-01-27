@@ -31,7 +31,7 @@ const ControlMenu = (
         className='flex rounded-lg justify-center items-center h-8 w-20
           bg-iconbg border-2'
       >
-        <Trash2 className="w-4 h-4" /> Delete
+        <Trash2 className='w-4 h-4' /> Delete
       </MenuItem>
     </ControlledMenu>
   )
