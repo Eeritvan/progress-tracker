@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { Plus, SettingsIcon } from 'lucide-react'
 import NewCardform from './NewCardForm'
 import Settings from './Settings'
+import { useHotkeys  } from 'react-hotkeys-hook'
 
 const TopBar = () => {
   const [visible, setVisible] = useState<'settings' | 'newcard' | null>(null)
+  useHotkeys('escape', () => setVisible(null))
 
   const handleVisibility = (setting: 'settings' | 'newcard') => {
     setVisible(visible === setting ? null : setting)

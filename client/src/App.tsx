@@ -22,7 +22,7 @@ const App = () => {
     <div className='flex flex-col items-center bg-background min-h-screen'>
       <div className='container w-[600px]'>
         <TopBar />
-        <CardList/>
+        <CardList />
       </div>
     </div>
   )
