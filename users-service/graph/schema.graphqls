@@ -1,0 +1,38 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+scalar UUID
+
+type User {
+  id: UUID!
+  username: String!
+  password: String!
+  totp: String
+}
+
+type LoginResponse {
+  username: String!
+  token: String!
+}
+
+input UserCredentialsInputInput {
+  username: String!
+  password: String!
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+  totp: String
+}
+
+type Query {
+  ping: String!
+}
+
+type Mutation {
+  createUser(input: UserCredentialsInputInput!): LoginResponse!
+  login(input: LoginInput!): LoginResponse!
+  toggleTotp(input: UserCredentialsInputInput!): Boolean!
+}
