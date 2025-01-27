@@ -1,9 +1,8 @@
-import CardList from './components/CardList'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import { useQuery } from '@tanstack/react-query'
-import TopBar from './components/TopBar'
 import { Redirect, Route, Switch } from 'wouter'
 import Authentication from './components/Authentication'
+import MainView from './components/MainView'
 
 const App = () => {
   const { setItem: setTheme, getItem: getTheme } = useLocalStorage('theme')
@@ -41,12 +40,7 @@ const App = () => {
           {token ? <Redirect to='/' /> : <Authentication />}
         </Route>
         <Route>
-          {!token ? <Redirect to='/login' /> :
-            <div className='container w-[600px]'>
-              <TopBar />
-              <CardList />
-            </div>
-          }
+          {!token ? <Redirect to='/login' /> : <MainView />}
         </Route>
       </Switch>
     </div>

@@ -15,7 +15,7 @@ import {
 } from 'valibot'
 import { useState } from 'react'
 import IconSelector from './IconSelector'
-import { COLORS, ICONS } from '../../../utils/constants'
+import { COLORS, ICONS } from '../../../../utils/constants'
 
 const newCardSchema = object({
   title: pipe(
