@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 stats.html
-.million
+.env
 
 # Editor directories and files
 .vscode/*
