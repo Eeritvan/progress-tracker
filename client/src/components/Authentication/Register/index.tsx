@@ -62,8 +62,9 @@ const Register = () => {
           password: data.password
         })
       if (result.errors) throw result.errors[0].message
-      setItem(result)
-      return result
+      const userData = result.data?.login
+      setItem(userData)
+      return userData
     },
     onError: (e) => { throw e },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['token'] })
