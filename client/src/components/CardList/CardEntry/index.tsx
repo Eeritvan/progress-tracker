@@ -42,7 +42,11 @@ const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
     >
       <div className='flex mb-2'>
         <CardInfo icon={icon} name={name} desc={desc} />
-        <ReadyButton id={id} color={color} />
+        <ReadyButton
+          id={id}
+          completed={completedDays.has(new Date().toISOString().split('T')[0])}
+          color={color}
+        />
       </div>
       <div className='grid grid-rows-7 gap-1 grid-flow-col'>
         {generateDates().map((date, index) => (

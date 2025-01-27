@@ -4,7 +4,7 @@ const SingleDay = ({
   return (
     <button
       className={
-        `aspect-square h-4 rounded-sm ${completed ? '' : 'opacity-50'}`
+        `aspect-square h-4 rounded-sm ${completed ? '' : 'opacity-40'}`
       }
       style={{ backgroundColor: color }}
       // eslint-disable-next-line no-console
