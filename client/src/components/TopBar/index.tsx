@@ -12,7 +12,7 @@ const TopBar = () => {
 
   return (
     <div>
-      <div className='flex w-[600px] justify-between'>
+      <div className='flex justify-between'>
         <button
           className='flex justify-center items-center bg-buttonbg aspect-square
           h-14 rounded-xl'

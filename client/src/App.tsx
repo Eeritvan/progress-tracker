@@ -20,8 +20,10 @@ const App = () => {
 
   return (
     <div className='flex flex-col items-center bg-background min-h-screen'>
-      <TopBar />
-      <CardList/>
+      <div className='container w-[600px]'>
+        <TopBar />
+        <CardList/>
+      </div>
     </div>
   )
 }

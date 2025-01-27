@@ -67,7 +67,7 @@ const NewCardform = () => {
 
   return (
     <form
-      className='w-[600px] bg-cardbg rounded-xl p-2'
+      className='bg-cardbg rounded-xl p-2'
       onSubmit={handleSubmit(onSubmit)}
     >
       <FormField
