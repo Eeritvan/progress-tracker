@@ -52,4 +52,6 @@ input NewCard {
 
 type Mutation {
   createCard(input: NewCard!): Card!
+  deleteCard(input: ID!): Boolean!
+  completeDay(input: ID!): Boolean!
 }

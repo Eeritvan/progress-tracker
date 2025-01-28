@@ -8,6 +8,7 @@ import (
 	"context"
 	"data-service/graph/model"
 	"data-service/internal/auth"
+	"fmt"
 )
 
 // CreateCard is the resolver for the createCard field.
@@ -42,6 +43,20 @@ func (r *mutationResolver) CreateCard(ctx context.Context, input model.NewCard) 
 	}
 
 	return &card, nil
+}
+
+// DeleteCard is the resolver for the deleteCard field.
+func (r *mutationResolver) DeleteCard(ctx context.Context, input string) (bool, error) {
+	fmt.Println("delete", input)
+
+	return false, nil
+}
+
+// CompleteDay is the resolver for the completeDay field.
+func (r *mutationResolver) CompleteDay(ctx context.Context, input string) (bool, error) {
+	fmt.Println("complete", input)
+
+	return true, nil
 }
 
 // GetCards is the resolver for the getCards field.
