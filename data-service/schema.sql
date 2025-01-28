@@ -24,7 +24,7 @@ CREATE TABLE cards (
 	owner VARCHAR(50) NOT NULL,
 	name VARCHAR(50) NOT NULL CHECK (LENGTH(name) >= 3),
 	description VARCHAR(50),
-	completedDays TEXT[] DEFAULT ARRAY[]::TEXT[],
+	completed_days TEXT[] DEFAULT ARRAY[]::TEXT[],
 	color_id INTEGER NOT NULL REFERENCES colors(id),
     icon_id INTEGER NOT NULL REFERENCES icons(id),
 	UNIQUE(owner, name)

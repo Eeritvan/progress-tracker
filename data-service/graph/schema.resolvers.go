@@ -25,9 +25,9 @@ func (r *mutationResolver) CreateCard(ctx context.Context, input model.NewCard) 
         	SELECT $1, $2, $3, 
             	(SELECT id FROM colors WHERE name = $4),
             	(SELECT id FROM icons WHERE name = $5)
-			RETURNING id, name, description, completedDays, color_id, icon_id
+			RETURNING id, name, description, completed_days, color_id, icon_id
 		)
-		SELECT i.id, i.name, i.description, i.completedDays, c.name, ic.name
+		SELECT i.id, i.name, i.description, i.completed_days, c.name, ic.name
 		FROM inserted i
 		LEFT JOIN colors c ON i.color_id = c.id
 		LEFT JOIN icons ic ON i.icon_id = ic.id
@@ -69,17 +69,17 @@ func (r *mutationResolver) CompleteDay(ctx context.Context, input string) (bool,
 		return false, err
 	}
 
-	currentTime := time.Now().Format("02-01-2006")
+	currentTime := time.Now().Format("2006-01-02")
 
 	var isCompleted bool
 	err = r.DB.QueryRow(ctx, `
 		UPDATE cards
-		SET completedDays = CASE 
-			WHEN $3 = ANY(completedDays) THEN array_remove(completedDays, $3)
-			ELSE array_append(completedDays, $3)
+		SET completed_days = CASE 
+			WHEN $3 = ANY(completed_days) THEN array_remove(completed_days, $3)
+			ELSE array_append(completed_days, $3)
 		END
 		WHERE owner = $1 AND id = $2
-		RETURNING $3 = ANY(completedDays)
+		RETURNING $3 = ANY(completed_days)
 	`, username, input, currentTime).Scan(&isCompleted)
 	if err != nil {
 		return false, err
@@ -97,7 +97,7 @@ func (r *queryResolver) GetCards(ctx context.Context) ([]*model.Card, error) {
 
 	var cards []*model.Card
 	rows, err := r.DB.Query(ctx, `
-		SELECT C.id, C.name, C.description, C.completedDays, COL.name, I.name
+		SELECT C.id, C.name, C.description, C.completed_days, COL.name, I.name
 		FROM cards C
 		LEFT JOIN colors COL ON C.color_id=COL.id
 		LEFT JOIN icons I ON C.icon_id=I.id
