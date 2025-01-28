@@ -8,7 +8,7 @@ import (
 	"context"
 	"data-service/graph/model"
 	"data-service/internal/auth"
-	"time"
+	"data-service/internal/cards"
 )
 
 // CreateCard is the resolver for the createCard field.
@@ -18,31 +18,12 @@ func (r *mutationResolver) CreateCard(ctx context.Context, input model.NewCard) 
 		return nil, err
 	}
 
-	var card model.Card
-	if err := r.DB.QueryRow(ctx, `
-		WITH inserted AS (
-			INSERT INTO cards (owner, name, description, color_id, icon_id)
-        	SELECT $1, $2, $3, 
-            	(SELECT id FROM colors WHERE name = $4),
-            	(SELECT id FROM icons WHERE name = $5)
-			RETURNING id, name, description, completed_days, color_id, icon_id
-		)
-		SELECT i.id, i.name, i.description, i.completed_days, c.name, ic.name
-		FROM inserted i
-		LEFT JOIN colors c ON i.color_id = c.id
-		LEFT JOIN icons ic ON i.icon_id = ic.id
-	`, username, input.Name, input.Desc, input.Color, input.Icon).Scan(
-		&card.ID,
-		&card.Name,
-		&card.Desc,
-		&card.CompletedDays,
-		&card.Color,
-		&card.Icon,
-	); err != nil {
+	card, err := cards.DB_CreateCard(ctx, r.DB, username, input)
+	if err != nil {
 		return nil, err
 	}
 
-	return &card, nil
+	return card, nil
 }
 
 // DeleteCard is the resolver for the deleteCard field.
@@ -52,14 +33,12 @@ func (r *mutationResolver) DeleteCard(ctx context.Context, input string) (bool, 
 		return false, err
 	}
 
-	if _, err := r.DB.Exec(ctx, `
-		DELETE FROM cards
-		WHERE owner = $1 AND id=$2
-	`, username, input); err != nil {
-		return false, err
+	result, err := cards.DB_DeleteCard(ctx, r.DB, username, input)
+	if err != nil {
+		return false, nil
 	}
 
-	return true, nil
+	return result, nil
 }
 
 // CompleteDay is the resolver for the completeDay field.
@@ -69,23 +48,12 @@ func (r *mutationResolver) CompleteDay(ctx context.Context, input string) (bool,
 		return false, err
 	}
 
-	currentTime := time.Now().Format("2006-01-02")
-
-	var isCompleted bool
-	err = r.DB.QueryRow(ctx, `
-		UPDATE cards
-		SET completed_days = CASE 
-			WHEN $3 = ANY(completed_days) THEN array_remove(completed_days, $3)
-			ELSE array_append(completed_days, $3)
-		END
-		WHERE owner = $1 AND id = $2
-		RETURNING $3 = ANY(completed_days)
-	`, username, input, currentTime).Scan(&isCompleted)
+	result, err := cards.DB_CompleteDay(ctx, r.DB, username, input)
 	if err != nil {
-		return false, err
+		return false, nil
 	}
 
-	return isCompleted, nil
+	return result, nil
 }
 
 // ReorderCards is the resolver for the reorderCards field.
@@ -95,18 +63,12 @@ func (r *mutationResolver) ReorderCards(ctx context.Context, input []string) (bo
 		return false, err
 	}
 
-	for i, id := range input {
-		_, err := r.DB.Exec(ctx, `
-            UPDATE cards 
-            SET order_index = $1
-            WHERE owner = $2 AND id = $3
-        `, i, username, id)
-		if err != nil {
-			return false, err
-		}
+	result, err := cards.DB_ReorderCards(ctx, r.DB, username, input)
+	if err != nil {
+		return false, err
 	}
 
-	return true, nil
+	return result, nil
 }
 
 // GetCards is the resolver for the getCards field.
@@ -116,34 +78,8 @@ func (r *queryResolver) GetCards(ctx context.Context) ([]*model.Card, error) {
 		return nil, err
 	}
 
-	var cards []*model.Card
-	rows, err := r.DB.Query(ctx, `
-		SELECT C.id, C.name, C.description, C.completed_days, COL.name, I.name
-		FROM cards C
-		LEFT JOIN colors COL ON C.color_id=COL.id
-		LEFT JOIN icons I ON C.icon_id=I.id
-		WHERE owner = $1
-		ORDER BY C.order_index ASC
-	`, username)
+	cards, err := cards.DB_GetCards(ctx, r.DB, username)
 	if err != nil {
-		return nil, err
-	}
-
-	for rows.Next() {
-		var card model.Card
-		if err := rows.Scan(
-			&card.ID,
-			&card.Name,
-			&card.Desc,
-			&card.CompletedDays,
-			&card.Color,
-			&card.Icon,
-		); err != nil {
-			return nil, err
-		}
-		cards = append(cards, &card)
-	}
-	if err = rows.Err(); err != nil {
 		return nil, err
 	}
 
