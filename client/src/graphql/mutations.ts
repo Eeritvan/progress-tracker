@@ -56,3 +56,9 @@ export const createCardMutation = dataGraffle.gql(`
     }
   }`
 )
+
+export const deleteCardMutation = dataGraffle.gql(`
+  mutation DeleteCard($id: ID!) {
+    deleteCard(input: $id)
+  }`
+)

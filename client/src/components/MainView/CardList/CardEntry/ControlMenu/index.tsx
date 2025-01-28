@@ -1,6 +1,8 @@
 import { ControlledMenu, MenuItem } from '@szhsin/react-menu'
 import useCardListSlice from '@/store/cardListStore'
 import { Trash2 } from 'lucide-react'
+import { useMutation } from '@tanstack/react-query'
+import { deleteCardMutation } from '@/graphql/mutations'
 
 interface ControlMenuProps {
   id: number
@@ -14,9 +16,19 @@ const ControlMenu = (
 ) => {
   const deleteCard = useCardListSlice((state) => state.deleteCard)
 
+  const deleteMutate = useMutation({
+    mutationFn: async (id: number) => {
+      const result = await deleteCardMutation.send({ id })
+      if (result.errors) throw result.errors[0].message
+      return result.data?.deleteCard
+    },
+    onError: (e) => { throw e },
+    onSuccess: () => deleteCard(id)
+  })
+
   const handleDelete = () => {
     const answer = confirm('Are you sure?')
-    if (answer) deleteCard(id)
+    if (answer) deleteMutate.mutateAsync(id)
   }
 
   return (
