@@ -47,9 +47,19 @@ func (r *mutationResolver) CreateCard(ctx context.Context, input model.NewCard) 
 
 // DeleteCard is the resolver for the deleteCard field.
 func (r *mutationResolver) DeleteCard(ctx context.Context, input string) (bool, error) {
-	fmt.Println("delete", input)
+	username, err := auth.ValidateToken(ctx)
+	if err != nil {
+		return false, err
+	}
 
-	return false, nil
+	if _, err := r.DB.Exec(ctx, `
+		DELETE FROM cards
+		WHERE owner = $1 AND id=$2
+	`, username, input); err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // CompleteDay is the resolver for the completeDay field.
