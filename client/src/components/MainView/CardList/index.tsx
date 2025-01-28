@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import CardEntry from './CardEntry'
 import useCardListSlice, { Card } from '@/store/cardListStore'
 import {

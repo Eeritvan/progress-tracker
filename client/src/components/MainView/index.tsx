@@ -4,6 +4,15 @@ import TopBar from './TopBar'
 import { getCardsQuery } from '@/graphql/queries'
 import useCardListSlice, { Card } from '@/store/cardListStore'
 
+interface RawCardData {
+  id: string;
+  name: string;
+  desc: string;
+  completedDays: string[];
+  color: string;
+  icon: string;
+}
+
 const MainView = () => {
   const setCards = useCardListSlice((state) => state.setCardsOrder)
   useQuery({
@@ -12,13 +21,9 @@ const MainView = () => {
     queryFn: async () => {
       const result = await getCardsQuery.send()
       const data = result.data?.getCards
-      const cards: Card[] = data.map((x: any) => ({
-        id: x.id,
-        name: x.name,
-        desc: x.desc,
-        completedDays: new Set<string>(x.completedDays),
-        color: x.color,
-        icon: x.icon
+      const cards: Card[] = data.map((x: RawCardData) => ({
+        ...x,
+        completedDays: new Set<string>(x.completedDays)
       }))
       setCards(cards)
       return cards

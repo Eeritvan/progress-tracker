@@ -1,5 +1,5 @@
-import Button from './Button'
-import FormField from './FormField'
+import Button from '@/components/shared/Button'
+import FormField from '@/components/shared/FormField'
 import ColorSelector from './ColorSelector'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'

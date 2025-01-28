@@ -3,8 +3,8 @@ import { valibotResolver } from '@hookform/resolvers/valibot'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { registerMutation } from '@/graphql/mutations'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
-import FormField from '../shared/FormField'
-import Button from '../shared/Button'
+import FormField from '../../shared/FormField'
+import Button from '../../shared/Button'
 import {
   object,
   pipe,
