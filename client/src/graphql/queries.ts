@@ -1,11 +1,17 @@
 import { Graffle } from 'graffle'
 
-const graffle = Graffle
+const dataGraffle = Graffle
   .create({ output: { envelope: { errors: { execution: true } } } })
-  .transport({ url: 'http://localhost:8081/query' })
+  .transport({
+    url: import.meta.env.VITE_DATA_SVC,
+    headers: {
+      authorization:
+        `Bearer ${JSON.parse(window.localStorage.getItem('user-info')).token}`
+    }
+  })
 
-export const createCardMutation = graffle.gql(`
-  mutation GetCards() {
+export const getCardsQuery = dataGraffle.gql(`
+  query GetCards {
     getCards {
       id
       name

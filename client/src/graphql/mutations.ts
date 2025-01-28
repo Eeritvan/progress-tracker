@@ -9,7 +9,8 @@ const dataGraffle = Graffle
   .transport({
     url: import.meta.env.VITE_DATA_SVC,
     headers: {
-      authorization: `Bearer ${JSON.parse(window.localStorage.getItem('user-info')).token}`
+      authorization:
+        `Bearer ${JSON.parse(window.localStorage.getItem('user-info')).token}`
     }
   })
 
