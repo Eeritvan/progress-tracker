@@ -27,5 +27,6 @@ CREATE TABLE cards (
 	completed_days TEXT[] DEFAULT ARRAY[]::TEXT[],
 	color_id INTEGER NOT NULL REFERENCES colors(id),
     icon_id INTEGER NOT NULL REFERENCES icons(id),
+    order_index INTEGER NOT NULL DEFAULT 0,
 	UNIQUE(owner, name)
 );

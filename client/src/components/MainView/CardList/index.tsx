@@ -20,6 +20,8 @@ import {
   verticalListSortingStrategy,
   sortableKeyboardCoordinates
 } from '@dnd-kit/sortable'
+import { useMutation } from '@tanstack/react-query'
+import { reorderCardsMutation } from '@/graphql/mutations'
 
 const CardList = () => {
   const cards = useCardListSlice((state) => state.cards)
@@ -35,7 +37,15 @@ const CardList = () => {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
+  const reorderMutation = useMutation({
+    mutationFn: async (cardIds: number[]) => {
+      const result = await reorderCardsMutation.send({ input: cardIds })
+      if (result.errors) throw result.errors[0].message
+      return result.data?.reorderCards
+    }
+  })
+
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
 
     if (over && active.id !== over.id) {
@@ -43,8 +53,9 @@ const CardList = () => {
       const newIndex = cards.findIndex((card: Card) => card.id === over.id)
       const newCards = arrayMove(cards, oldIndex, newIndex)
       setCardsOrder(newCards)
+      reorderMutation.mutateAsync(newCards.map(card => Number(card.id)))
     }
-  }, [cards, setCardsOrder])
+  }
 
   return (
     <div>

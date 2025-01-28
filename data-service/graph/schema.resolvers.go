@@ -88,6 +88,27 @@ func (r *mutationResolver) CompleteDay(ctx context.Context, input string) (bool,
 	return isCompleted, nil
 }
 
+// ReorderCards is the resolver for the reorderCards field.
+func (r *mutationResolver) ReorderCards(ctx context.Context, input []string) (bool, error) {
+	username, err := auth.ValidateToken(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	for i, id := range input {
+		_, err := r.DB.Exec(ctx, `
+            UPDATE cards 
+            SET order_index = $1
+            WHERE owner = $2 AND id = $3
+        `, i, username, id)
+		if err != nil {
+			return false, err
+		}
+	}
+
+	return true, nil
+}
+
 // GetCards is the resolver for the getCards field.
 func (r *queryResolver) GetCards(ctx context.Context) ([]*model.Card, error) {
 	username, err := auth.ValidateToken(ctx)
@@ -102,6 +123,7 @@ func (r *queryResolver) GetCards(ctx context.Context) ([]*model.Card, error) {
 		LEFT JOIN colors COL ON C.color_id=COL.id
 		LEFT JOIN icons I ON C.icon_id=I.id
 		WHERE owner = $1
+		ORDER BY C.order_index ASC
 	`, username)
 	if err != nil {
 		return nil, err
