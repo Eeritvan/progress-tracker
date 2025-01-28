@@ -27,10 +27,6 @@ input LoginInput {
   totp: String
 }
 
-type Query {
-  ping: String!
-}
-
 type Mutation {
   createUser(input: UserCredentialsInputInput!): LoginResponse!
   login(input: LoginInput!): LoginResponse!

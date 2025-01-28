@@ -93,11 +93,6 @@ func (r *mutationResolver) ToggleTotp(ctx context.Context, input model.UserCrede
 	return true, nil
 }
 
-// Ping is the resolver for the ping field.
-func (r *queryResolver) Ping(ctx context.Context) (string, error) {
-	return "#todo", nil
-}
-
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
