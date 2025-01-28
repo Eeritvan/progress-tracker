@@ -8,7 +8,6 @@ import (
 	"context"
 	"data-service/graph/model"
 	"data-service/internal/auth"
-	"fmt"
 	"time"
 )
 
@@ -71,20 +70,22 @@ func (r *mutationResolver) CompleteDay(ctx context.Context, input string) (bool,
 	}
 
 	currentTime := time.Now().Format("02-01-2006")
-	fmt.Println(username, input, currentTime)
 
-	if _, err := r.DB.Exec(ctx, `
+	var isCompleted bool
+	err = r.DB.QueryRow(ctx, `
 		UPDATE cards
 		SET completedDays = CASE 
 			WHEN $3 = ANY(completedDays) THEN array_remove(completedDays, $3)
 			ELSE array_append(completedDays, $3)
 		END
 		WHERE owner = $1 AND id = $2
-	`, username, input, currentTime); err != nil {
+		RETURNING $3 = ANY(completedDays)
+	`, username, input, currentTime).Scan(&isCompleted)
+	if err != nil {
 		return false, err
 	}
 
-	return false, nil
+	return isCompleted, nil
 }
 
 // GetCards is the resolver for the getCards field.
