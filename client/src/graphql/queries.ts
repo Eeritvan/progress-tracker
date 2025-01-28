@@ -1,12 +1,20 @@
 import { Graffle } from 'graffle'
 
+const getAuthToken = (): string => {
+  const userInfo = window.localStorage.getItem('user-info')
+  if (!userInfo) return ''
+
+  const parsed = JSON.parse(userInfo)
+  return parsed.token || ''
+}
+
 const dataGraffle = Graffle
   .create({ output: { envelope: { errors: { execution: true } } } })
   .transport({
     url: import.meta.env.VITE_DATA_SVC,
     headers: {
       authorization:
-        `Bearer ${JSON.parse(window.localStorage.getItem('user-info')).token}`
+        `Bearer ${getAuthToken()}`
     }
   })
 
