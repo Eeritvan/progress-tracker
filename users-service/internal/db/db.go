@@ -33,13 +33,8 @@ func CheckForTable(conn *pgx.Conn, ctx context.Context) error {
 	}
 
 	if !exists {
-		_, err = conn.Exec(ctx, `
-            CREATE TABLE users (
-                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                username VARCHAR(50)  UNIQUE NOT NULL CHECK (LENGTH(username) >= 3),
-                password_hash VARCHAR(60) NOT NULL,
-				totp VARCHAR(50)
-            );`)
+		sqlFile, _ := os.ReadFile("./schema.sql")
+		_, err = conn.Exec(ctx, string(sqlFile))
 		if err != nil {
 			return err
 		}
