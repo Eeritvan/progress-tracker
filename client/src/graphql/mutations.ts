@@ -87,3 +87,9 @@ export const reorderCardsMutation = dataGraffle.gql(`
     reorderCards(input: $input)
   }
 `)
+
+export const resetAllCardsMutation = dataGraffle.gql(`
+  mutation ResetAllCards {
+    resetAllCards
+  }
+`)

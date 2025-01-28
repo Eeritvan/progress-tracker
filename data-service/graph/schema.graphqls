@@ -55,4 +55,5 @@ type Mutation {
   deleteCard(input: ID!): Boolean!
   completeDay(input: ID!): Boolean!
   reorderCards(input: [ID!]!): Boolean!
+  resetAllCards: Boolean!
 }

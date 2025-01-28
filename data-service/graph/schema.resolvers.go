@@ -71,6 +71,21 @@ func (r *mutationResolver) ReorderCards(ctx context.Context, input []string) (bo
 	return result, nil
 }
 
+// ResetAllCards is the resolver for the resetAllCards field.
+func (r *mutationResolver) ResetAllCards(ctx context.Context) (bool, error) {
+	username, err := auth.ValidateToken(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	result, err := cards.DB_ResetAllCards(ctx, r.DB, username)
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
+}
+
 // GetCards is the resolver for the getCards field.
 func (r *queryResolver) GetCards(ctx context.Context) ([]*model.Card, error) {
 	username, err := auth.ValidateToken(ctx)

@@ -185,3 +185,17 @@ func DB_GetCards(ctx context.Context, db DBConnection, username string) ([]*mode
 
 	return cards, nil
 }
+
+func DB_ResetAllCards(ctx context.Context, db DBConnection, username string) (bool, error) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	if _, err := db.Exec(ctx, `
+		DELETE FROM cards
+		WHERE owner = $1
+	`, username); err != nil {
+		return false, err
+	}
+
+	return true, nil
+}

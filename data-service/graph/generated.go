@@ -57,10 +57,11 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CompleteDay  func(childComplexity int, input string) int
-		CreateCard   func(childComplexity int, input model.NewCard) int
-		DeleteCard   func(childComplexity int, input string) int
-		ReorderCards func(childComplexity int, input []string) int
+		CompleteDay   func(childComplexity int, input string) int
+		CreateCard    func(childComplexity int, input model.NewCard) int
+		DeleteCard    func(childComplexity int, input string) int
+		ReorderCards  func(childComplexity int, input []string) int
+		ResetAllCards func(childComplexity int) int
 	}
 
 	Query struct {
@@ -73,6 +74,7 @@ type MutationResolver interface {
 	DeleteCard(ctx context.Context, input string) (bool, error)
 	CompleteDay(ctx context.Context, input string) (bool, error)
 	ReorderCards(ctx context.Context, input []string) (bool, error)
+	ResetAllCards(ctx context.Context) (bool, error)
 }
 type QueryResolver interface {
 	GetCards(ctx context.Context) ([]*model.Card, error)
@@ -186,6 +188,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.ReorderCards(childComplexity, args["input"].([]string)), true
+
+	case "Mutation.resetAllCards":
+		if e.complexity.Mutation.ResetAllCards == nil {
+			break
+		}
+
+		return e.complexity.Mutation.ResetAllCards(childComplexity), true
 
 	case "Query.getCards":
 		if e.complexity.Query.GetCards == nil {
@@ -976,6 +985,50 @@ func (ec *executionContext) fieldContext_Mutation_reorderCards(ctx context.Conte
 	if fc.Args, err = ec.field_Mutation_reorderCards_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_resetAllCards(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_resetAllCards(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ResetAllCards(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_resetAllCards(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -3097,6 +3150,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "reorderCards":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_reorderCards(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "resetAllCards":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_resetAllCards(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
