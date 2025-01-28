@@ -9,6 +9,7 @@ import (
 	"data-service/graph/model"
 	"data-service/internal/auth"
 	"fmt"
+	"time"
 )
 
 // CreateCard is the resolver for the createCard field.
@@ -64,9 +65,26 @@ func (r *mutationResolver) DeleteCard(ctx context.Context, input string) (bool, 
 
 // CompleteDay is the resolver for the completeDay field.
 func (r *mutationResolver) CompleteDay(ctx context.Context, input string) (bool, error) {
-	fmt.Println("complete", input)
+	username, err := auth.ValidateToken(ctx)
+	if err != nil {
+		return false, err
+	}
 
-	return true, nil
+	currentTime := time.Now().Format("02-01-2006")
+	fmt.Println(username, input, currentTime)
+
+	if _, err := r.DB.Exec(ctx, `
+		UPDATE cards
+		SET completedDays = CASE 
+			WHEN $3 = ANY(completedDays) THEN array_remove(completedDays, $3)
+			ELSE array_append(completedDays, $3)
+		END
+		WHERE owner = $1 AND id = $2
+	`, username, input, currentTime); err != nil {
+		return false, err
+	}
+
+	return false, nil
 }
 
 // GetCards is the resolver for the getCards field.
