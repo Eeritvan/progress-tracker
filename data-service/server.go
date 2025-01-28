@@ -12,7 +12,6 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/joho/godotenv"
-	"github.com/rs/cors"
 	"github.com/vektah/gqlparser/v2/ast"
 
 	"data-service/internal/db"
@@ -54,13 +53,7 @@ func main() {
 		Cache: lru.New[string](100),
 	})
 
-	handler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
-		AllowedHeaders:   []string{"*"},
-		AllowCredentials: true,
-	}).Handler(srv)
-
+	handler := middleware.CorsMiddleware(srv)
 	handler = middleware.AuthHeaderMiddleware(handler)
 
 	http.Handle("/query", handler)
