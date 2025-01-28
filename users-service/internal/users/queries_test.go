@@ -173,11 +173,11 @@ func TestCreateUser(t *testing.T) {
 				mockDB.ExpectBegin()
 				mockDB.ExpectQuery("INSERT INTO users \\(username, password_hash\\) VALUES \\(\\$1, \\$2\\) RETURNING id, username, password_hash, totp").
 					WithArgs("x", []byte("hashed_password")).
-					WillReturnError(ErrUserCreationFailed)
+					WillReturnError(ErrInvalidUsername)
 				mockDB.ExpectRollback()
 			},
 			want:    nil,
-			wantErr: ErrUserCreationFailed,
+			wantErr: ErrInvalidUsername,
 		},
 	}
 
@@ -185,6 +185,7 @@ func TestCreateUser(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mockFn()
 			result, err := CreateUser(context.Background(), mockDB, tt.username, tt.password)
+			t.Log(err)
 			if err != tt.wantErr {
 				t.Errorf("CreateUser(): %v, wanted %v", err, tt.wantErr)
 			}

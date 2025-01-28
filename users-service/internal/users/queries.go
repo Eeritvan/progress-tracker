@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 	"users-service/graph/model"
@@ -89,15 +90,18 @@ func CreateUser(ctx context.Context, db DBConnection, username string, password 
 		&user.Password,
 		&user.Totp,
 	); err != nil {
-		pgErr := err.(*pgconn.PgError)
-		switch pgErr.Code {
-		case "23505":
-			return nil, ErrUserExists
-		case "23514":
-			return nil, ErrInvalidUsername
-		default:
-			return nil, ErrUserCreationFailed
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			switch pgErr.Code {
+			case "23505":
+				return nil, ErrUserExists
+			case "23514":
+				return nil, ErrInvalidUsername
+			default:
+				return nil, ErrUserCreationFailed
+			}
 		}
+		return nil, err
 	}
 
 	if err := tx.Commit(ctx); err != nil {
