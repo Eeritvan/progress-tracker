@@ -3,19 +3,37 @@ package cards
 import (
 	"context"
 	"data-service/graph/model"
+	"fmt"
 	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
+const timeout = 5 * time.Second
+
 type DBConnection interface {
 	QueryRow(ctx context.Context, query string, args ...interface{}) pgx.Row
 	Exec(ctx context.Context, query string, args ...interface{}) (pgconn.CommandTag, error)
 	Query(ctx context.Context, query string, args ...interface{}) (pgx.Rows, error)
+	Begin(ctx context.Context) (pgx.Tx, error)
 }
 
+var (
+	ErrTransactionBeginFail  = fmt.Errorf("failed to begin transaction")
+	ErrTransactionCommitFail = fmt.Errorf("failed to commit transaction")
+)
+
 func DB_CreateCard(ctx context.Context, db DBConnection, username string, input model.NewCard) (*model.Card, error) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	tx, err := db.Begin(ctx)
+	if err != nil {
+		return nil, ErrTransactionBeginFail
+	}
+	defer tx.Rollback(ctx)
+
 	var card model.Card
 	if err := db.QueryRow(ctx, `
 		WITH inserted AS (
@@ -40,25 +58,50 @@ func DB_CreateCard(ctx context.Context, db DBConnection, username string, input 
 		return nil, err
 	}
 
-	return &card, nil
+	if err := tx.Commit(ctx); err != nil {
+		return nil, ErrTransactionCommitFail
+	}
 
+	return &card, nil
 }
 
 func DB_DeleteCard(ctx context.Context, db DBConnection, username string, input string) (bool, error) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	tx, err := db.Begin(ctx)
+	if err != nil {
+		return false, ErrTransactionBeginFail
+	}
+	defer tx.Rollback(ctx)
+
 	if _, err := db.Exec(ctx, `
 		DELETE FROM cards
 		WHERE owner = $1 AND id=$2
 	`, username, input); err != nil {
 		return false, err
 	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return false, ErrTransactionCommitFail
+	}
+
 	return true, nil
 }
 
 func DB_CompleteDay(ctx context.Context, db DBConnection, username string, input string) (bool, error) {
-	currentTime := time.Now().Format("2006-01-02")
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
 
+	tx, err := db.Begin(ctx)
+	if err != nil {
+		return false, ErrTransactionBeginFail
+	}
+	defer tx.Rollback(ctx)
+
+	currentTime := time.Now().Format("2006-01-02")
 	var isCompleted bool
-	err := db.QueryRow(ctx, `
+	if err = db.QueryRow(ctx, `
 		UPDATE cards
 		SET completed_days = CASE 
 			WHEN $3 = ANY(completed_days) THEN array_remove(completed_days, $3)
@@ -66,15 +109,27 @@ func DB_CompleteDay(ctx context.Context, db DBConnection, username string, input
 		END
 		WHERE owner = $1 AND id = $2
 		RETURNING $3 = ANY(completed_days)
-	`, username, input, currentTime).Scan(&isCompleted)
-	if err != nil {
+	`, username, input, currentTime).Scan(&isCompleted); err != nil {
 		return false, err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return false, ErrTransactionCommitFail
 	}
 
 	return isCompleted, nil
 }
 
 func DB_ReorderCards(ctx context.Context, db DBConnection, username string, input []string) (bool, error) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	tx, err := db.Begin(ctx)
+	if err != nil {
+		return false, ErrTransactionBeginFail
+	}
+	defer tx.Rollback(ctx)
+
 	for i, id := range input {
 		_, err := db.Exec(ctx, `
             UPDATE cards 
@@ -85,10 +140,18 @@ func DB_ReorderCards(ctx context.Context, db DBConnection, username string, inpu
 			return false, err
 		}
 	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return false, ErrTransactionCommitFail
+	}
+
 	return true, nil
 }
 
 func DB_GetCards(ctx context.Context, db DBConnection, username string) ([]*model.Card, error) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
 	var cards []*model.Card
 	rows, err := db.Query(ctx, `
 		SELECT C.id, C.name, C.description, C.completed_days, COL.name, I.name
