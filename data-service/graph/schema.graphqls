@@ -1,24 +1,55 @@
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
+enum Color {
+  darkseagreen,
+  lightgreen,
+  mediumaquamarine,
+  greenyellow,
+  aqua,
+  paleturquoise,
+  skyblue,
+  teal,
+  slateblue,
+  plum,
+  pink,
+  hotpink,
+  fuchsia,
+  tomato,
+  orangered
 }
 
-type User {
+enum Icon {
+  Book,
+  Code,
+  TentTree,
+  School,
+  AlarmClock,
+  Brush,
+  CalendarDays,
+  Gamepad2,
+  NotebookPen,
+  Coffee,
+  Wallet
+}
+
+type Card {
   id: ID!
   name: String!
+  desc: String
+  completedDays: [String!]
+  color: Color!
+  icon: Icon!
 }
 
 type Query {
-  todos: [Todo!]!
+  getCards: [Card!]!
 }
 
-input NewTodo {
-  text: String!
-  userId: String!
+input NewCard {
+  name: String!
+  desc: String
+  color: Color!
+  icon: Icon!
 }
 
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+  createCard(input: NewCard!): Card!
 }

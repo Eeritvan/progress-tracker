@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
@@ -44,19 +45,42 @@ func checkForTable(conn *pgx.Conn, ctx context.Context) error {
 	}
 
 	if !exists {
-		_, err = conn.Exec(ctx, `
-            CREATE TABLE cards (
-                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                username VARCHAR(50)  UNIQUE NOT NULL CHECK (LENGTH(username) >= 3),
-                password_hash VARCHAR(60) NOT NULL,
-				totp VARCHAR(50)
-            );`)
+		sqlFile, _ := os.ReadFile("./schema.sql")
+		_, err = conn.Exec(ctx, string(sqlFile))
 		if err != nil {
 			return err
 		}
 		log.Println("Cards table created successfully")
 	}
 	return nil
+}
+
+func AuthHeaderMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "OPTIONS" {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		auth := r.Header.Get("Authorization")
+		if auth == "" {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		}
+
+		parts := strings.Split(auth, "Bearer ")
+		if len(parts) != 2 {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		}
+
+		parsedAuth := parts[1]
+		ctx := context.WithValue(r.Context(), "authToken", parsedAuth)
+		r = r.WithContext(ctx)
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 func main() {
@@ -92,14 +116,16 @@ func main() {
 		Cache: lru.New[string](100),
 	})
 
-	corsHandler := cors.New(cors.Options{
+	handler := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: true,
 	}).Handler(srv)
 
-	http.Handle("/query", corsHandler)
+	handler = AuthHeaderMiddleware(handler)
+
+	http.Handle("/query", handler)
 	setupPlayground(port)
 
 	log.Fatal(http.ListenAndServe(":"+port, nil))

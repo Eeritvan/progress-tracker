@@ -2,25 +2,156 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
+type Card struct {
+	ID            string   `json:"id"`
+	Name          string   `json:"name"`
+	Desc          *string  `json:"desc,omitempty"`
+	CompletedDays []string `json:"completedDays,omitempty"`
+	Color         Color    `json:"color"`
+	Icon          Icon     `json:"icon"`
+}
+
 type Mutation struct {
 }
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type NewCard struct {
+	Name  string  `json:"name"`
+	Desc  *string `json:"desc,omitempty"`
+	Color Color   `json:"color"`
+	Icon  Icon    `json:"icon"`
 }
 
 type Query struct {
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
+type Color string
+
+const (
+	ColorDarkseagreen     Color = "darkseagreen"
+	ColorLightgreen       Color = "lightgreen"
+	ColorMediumaquamarine Color = "mediumaquamarine"
+	ColorGreenyellow      Color = "greenyellow"
+	ColorAqua             Color = "aqua"
+	ColorPaleturquoise    Color = "paleturquoise"
+	ColorSkyblue          Color = "skyblue"
+	ColorTeal             Color = "teal"
+	ColorSlateblue        Color = "slateblue"
+	ColorPlum             Color = "plum"
+	ColorPink             Color = "pink"
+	ColorHotpink          Color = "hotpink"
+	ColorFuchsia          Color = "fuchsia"
+	ColorTomato           Color = "tomato"
+	ColorOrangered        Color = "orangered"
+)
+
+var AllColor = []Color{
+	ColorDarkseagreen,
+	ColorLightgreen,
+	ColorMediumaquamarine,
+	ColorGreenyellow,
+	ColorAqua,
+	ColorPaleturquoise,
+	ColorSkyblue,
+	ColorTeal,
+	ColorSlateblue,
+	ColorPlum,
+	ColorPink,
+	ColorHotpink,
+	ColorFuchsia,
+	ColorTomato,
+	ColorOrangered,
 }
 
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+func (e Color) IsValid() bool {
+	switch e {
+	case ColorDarkseagreen, ColorLightgreen, ColorMediumaquamarine, ColorGreenyellow, ColorAqua, ColorPaleturquoise, ColorSkyblue, ColorTeal, ColorSlateblue, ColorPlum, ColorPink, ColorHotpink, ColorFuchsia, ColorTomato, ColorOrangered:
+		return true
+	}
+	return false
+}
+
+func (e Color) String() string {
+	return string(e)
+}
+
+func (e *Color) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Color(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Color", str)
+	}
+	return nil
+}
+
+func (e Color) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Icon string
+
+const (
+	IconBook         Icon = "Book"
+	IconCode         Icon = "Code"
+	IconTentTree     Icon = "TentTree"
+	IconSchool       Icon = "School"
+	IconAlarmClock   Icon = "AlarmClock"
+	IconBrush        Icon = "Brush"
+	IconCalendarDays Icon = "CalendarDays"
+	IconGamepad2     Icon = "Gamepad2"
+	IconNotebookPen  Icon = "NotebookPen"
+	IconCoffee       Icon = "Coffee"
+	IconWallet       Icon = "Wallet"
+)
+
+var AllIcon = []Icon{
+	IconBook,
+	IconCode,
+	IconTentTree,
+	IconSchool,
+	IconAlarmClock,
+	IconBrush,
+	IconCalendarDays,
+	IconGamepad2,
+	IconNotebookPen,
+	IconCoffee,
+	IconWallet,
+}
+
+func (e Icon) IsValid() bool {
+	switch e {
+	case IconBook, IconCode, IconTentTree, IconSchool, IconAlarmClock, IconBrush, IconCalendarDays, IconGamepad2, IconNotebookPen, IconCoffee, IconWallet:
+		return true
+	}
+	return false
+}
+
+func (e Icon) String() string {
+	return string(e)
+}
+
+func (e *Icon) UnmarshalGQL(v any) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Icon(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Icon", str)
+	}
+	return nil
+}
+
+func (e Icon) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

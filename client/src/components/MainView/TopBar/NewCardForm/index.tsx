@@ -13,9 +13,10 @@ import {
   InferInput,
   optional
 } from 'valibot'
-import { useState } from 'react'
 import IconSelector from './IconSelector'
 import { COLORS, ICONS } from '../../../../utils/constants'
+import { createCardMutation } from '@/graphql/mutations'
+import { useMutation } from '@tanstack/react-query'
 
 const newCardSchema = object({
   title: pipe(
@@ -46,20 +47,35 @@ const NewCardform = () => {
     resolver: valibotResolver(newCardSchema)
   })
 
-  const [id, setId] = useState(0)
-
-  const onSubmit: SubmitHandler<CardData> = async (data) => {
-    try {
+  const addCardMutate = useMutation({
+    mutationFn: async (data: CardData) => {
+      const result = await createCardMutation
+        .send({
+          name: data.title,
+          desc: data.desc || '',
+          color: data.color,
+          icon: data.icon
+        })
+      if (result.errors) throw result.errors[0].message
+      return result.data?.createCard
+    },
+    onError: (e) => { throw e },
+    onSuccess: (data) => {
       const newCard: Card = {
-        id,
-        name: data.title,
+        id: data.id,
+        name: data.name,
         desc: data.desc,
-        completedDays: new Set<string>(),
+        completedDays: new Set<string>(data.completedDays),
         color: data.color,
         icon: data.icon
       }
-      setId(id + 1)
       addNewCard(newCard)
+    }
+  })
+
+  const onSubmit: SubmitHandler<CardData> = async (data) => {
+    try {
+      await addCardMutate.mutateAsync(data)
     } catch (error) {
       setError('root', { message: error as string })
     }
