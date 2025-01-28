@@ -50,14 +50,16 @@ func (r *mutationResolver) CreateCard(ctx context.Context, input model.NewCard) 
 	if err := r.DB.QueryRow(ctx, `
 		WITH inserted AS (
 			INSERT INTO cards (owner, name, description, color_id, icon_id)
-			VALUES ($1, $2, $3, $4, $5)
+        	SELECT $1, $2, $3, 
+            	(SELECT id FROM colors WHERE name = $4),
+            	(SELECT id FROM icons WHERE name = $5)
 			RETURNING id, name, description, completedDays, color_id, icon_id
 		)
 		SELECT i.id, i.name, i.description, i.completedDays, c.name, ic.name
 		FROM inserted i
 		LEFT JOIN colors c ON i.color_id = c.id
 		LEFT JOIN icons ic ON i.icon_id = ic.id
-	`, username, input.Name, input.Desc, 1, 2).Scan(
+	`, username, input.Name, input.Desc, input.Color, input.Icon).Scan(
 		&card.ID,
 		&card.Name,
 		&card.Desc,
