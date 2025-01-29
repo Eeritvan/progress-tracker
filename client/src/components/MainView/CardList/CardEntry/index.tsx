@@ -44,7 +44,7 @@ const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
         <CardInfo icon={icon} name={name} desc={desc} />
         <ReadyButton
           id={id}
-          completed={completedDays.has(new Date().toISOString().split('T')[0])}
+          completed={completedDays.has(new Date().toLocaleDateString('en-CA'))}
           color={color}
         />
       </div>
