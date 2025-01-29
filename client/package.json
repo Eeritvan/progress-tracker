@@ -47,7 +47,6 @@
     "globals": "^15.14.0",
     "react-compiler-runtime": "^19.0.0-beta-e552027-20250112",
     "rimraf": "^6.0.1",
-    "rollup-plugin-visualizer": "^5.14.0",
     "tailwindcss": "^4.0.0",
     "typescript": "~5.6.3",
     "typescript-eslint": "^8.21.0",
