@@ -62,7 +62,7 @@ const Register = () => {
           password: data.password
         })
       if (result.errors) throw result.errors[0].message
-      const userData = result.data?.login
+      const userData = result.data?.createUser
       setItem(userData)
       return userData
     },
