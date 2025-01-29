@@ -5,6 +5,10 @@
     --color-cardbg: var(--theme-color-cardbg);
     --color-iconbg: var(--theme-color-iconbg);
     --color-buttonbg: var(--theme-color-buttonbg);
+    --color-text: var(--theme-color-text);
+
+    --color-sliderbg: var(--theme-color-sliderbg);
+    --color-sliderfore: var(--theme-color-sliderfore);
 }
 
 @layer themes {
@@ -13,6 +17,10 @@
         --color-cardbg: var(--color-neutral-400);
         --color-iconbg: var(--color-neutral-500);
         --color-buttonbg: var(--color-green-500);
+        --color-text: var(--color-neutral-900);
+
+        --color-sliderbg: var(--color-neutral-200);
+        --color-sliderfore: var(--color-white);
     }
 
     [data-theme=dark] {
@@ -20,7 +28,19 @@
         --color-cardbg: var(--color-neutral-800);
         --color-iconbg: var(--color-neutral-700);
         --color-buttonbg: var(--color-amber-700);
+        --color-text: var(--color-neutral-300);
+
+        --color-sliderbg: var(--color-neutral-700);
+        --color-sliderfore: var(--color-neutral-800);
     }
+}
+
+:root {
+    color: var(--color-text);
+}
+
+* {
+    @apply transition-[background-color,border-color] duration-200 ease-in-out;
 }
 
 @layer utilities {
@@ -30,5 +50,8 @@
     .no-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
-  }
+    }
+    .no-color-transition {
+        transition-property: transform !important;
+    }    
 }

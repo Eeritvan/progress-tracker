@@ -32,11 +32,11 @@ const Selector = ({ children }: SelectorProps) => {
 
   return (
     <div className='flex flex-col w-[400px]'>
-      <div className='relative rounded-xl grid bg-neutral-200 h-12 p-1'>
+      <div className='relative rounded-xl grid bg-sliderbg h-12 p-1'>
         {activeIndex !== -1 &&
         <div
-          className='relative rounded-xl bg-white transition-all duration-200
-            row-start-1 col-start-1'
+          className='relative rounded-xl bg-sliderfore transition-all
+            duration-200 row-start-1 col-start-1 no-color-transition'
           style={{
             width: `${100/childCount}%`,
             transform: `translateX(${activeIndex * 100}%)`

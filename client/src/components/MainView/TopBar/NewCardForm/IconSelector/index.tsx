@@ -51,7 +51,8 @@ const IconSelector = ({ register, error }: IconSelectorProps) => {
               />
               <label
                 htmlFor={icon}
-                className='absolute -translate-x-7 translate-y-1.5'
+                className='absolute -translate-x-7 translate-y-1.5
+                  text-neutral-950'
               >
                 <IconComponent size={20} />
               </label>
