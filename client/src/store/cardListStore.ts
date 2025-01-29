@@ -30,12 +30,13 @@ const useCardListSlice = create<CardListState>((set) => ({
     set((state) => ({
       cards: state.cards.filter((card) => card.id !== id)
     })),
-  toggleDay: (id: number) =>
+  toggleDay: (id: number) => {
+    const today = new Date().toLocaleDateString('en-CA')
+
     set((state) => ({
       cards: state.cards.map(card => {
         if (card.id !== id) return card
 
-        const today = new Date().toISOString().split('T')[0]
         const completedDays = new Set(card.completedDays)
 
         if (completedDays.has(today)) {
@@ -49,7 +50,8 @@ const useCardListSlice = create<CardListState>((set) => ({
           completedDays
         }
       })
-    })),
+    }))
+  },
   resetCards: () => set(() => ({ cards: [] }))
 }))
 
