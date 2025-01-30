@@ -16,6 +16,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: latest
     - name: Install dependencies
       run: bun install
     - name: Check style
@@ -45,3 +47,5 @@ jobs:
         tags: |
           eeritvan/tracker-client:${{ github.sha }}
           eeritvan/tracker-client:latest
+        cache-from: type=registry,ref=eeritvan/tracker-client:buildcache
+        cache-to: type=registry,ref=eeritvan/tracker-client:buildcache,mode=max
