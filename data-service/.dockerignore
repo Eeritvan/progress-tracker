@@ -3,3 +3,4 @@
 .dockerignore
 dev.go
 tools.go
+coverage.out
