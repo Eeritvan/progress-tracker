@@ -49,3 +49,4 @@ jobs:
           eeritvan/tracker-client:latest
         cache-from: type=registry,ref=eeritvan/tracker-client:buildcache
         cache-to: type=registry,ref=eeritvan/tracker-client:buildcache,mode=max
+
