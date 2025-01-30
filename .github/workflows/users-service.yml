@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'users-service/**'
+    # paths:
+    #   - 'users-service/**'
 
 jobs:
   lint:
@@ -22,6 +22,7 @@ jobs:
       uses: golangci/golangci-lint-action@v6
       with:
         version: latest
+        working-directory: users-service
 
   test:
     runs-on: ubuntu-22.04
