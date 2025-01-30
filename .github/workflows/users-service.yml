@@ -5,14 +5,14 @@ on:
     branches:
       - main
     paths:
-      - 'user-service/**'
+      - 'users-service/**'
 
 jobs:
   test:
     runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: user-service
+        working-directory: users-service
     steps:
     - uses: actions/checkout@v4
     - name: Setup Go
