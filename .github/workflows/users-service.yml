@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: go mod download
     - name: Run Unit Tests
-      run: go test -coverprofile=coverage.out ./internal/auth ./internal/users
+      run: go test -covermode=atomic -coverprofile=coverage.out $(cat testdirs.txt)
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
       with:
