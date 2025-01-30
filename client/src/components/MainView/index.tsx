@@ -23,7 +23,7 @@ const MainView = () => {
       const data = result.data?.getCards
       const cards: Card[] = data.map((x: RawCardData) => ({
         ...x,
-        completedDays: new Set<string>(x.completedDays)
+        completedDays: new Set(x.completedDays.map(date => date.split('T')[0]))
       }))
       setCards(cards)
       return cards
