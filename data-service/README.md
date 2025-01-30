@@ -39,7 +39,7 @@ go run .
 ## Environment Variables
 - DB_URL=<DB_URL>
 - JWT_KEY=<YOUR_KEY>
-- PORT=<CUSTOM_PORT> (optional, default 8080)
+- PORT=<CUSTOM_PORT> (optional, default 8081)
 
 ## Tech Used
 - GraphQL with 99designs/gqlgen

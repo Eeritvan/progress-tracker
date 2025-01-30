@@ -8,8 +8,8 @@
     "build": "tsc -b && vite build",
     "clean": "rimraf ./dist",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "build:start": "bun run build && bun run preview"
+    "start": "vite preview",
+    "build:start": "bun run build && bun run start"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
