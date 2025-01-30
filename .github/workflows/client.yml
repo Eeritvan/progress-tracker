@@ -1,0 +1,22 @@
+name: Check frontend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'client/**'
+
+jobs:
+  checking_eslint:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: client
+    steps:
+    - uses: actions/checkout@v4
+    - uses: oven-sh/setup-bun@v2
+    - name: Install dependencies
+      run: bun install
+    - name: Check style
+      run: bun run lint
