@@ -6,15 +6,16 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"time"
 )
 
 type Card struct {
-	ID            string   `json:"id"`
-	Name          string   `json:"name"`
-	Desc          *string  `json:"desc,omitempty"`
-	CompletedDays []string `json:"completedDays,omitempty"`
-	Color         Color    `json:"color"`
-	Icon          Icon     `json:"icon"`
+	ID            string       `json:"id"`
+	Name          string       `json:"name"`
+	Desc          *string      `json:"desc,omitempty"`
+	CompletedDays []*time.Time `json:"completedDays,omitempty"`
+	Color         Color        `json:"color"`
+	Icon          Icon         `json:"icon"`
 }
 
 type Mutation struct {

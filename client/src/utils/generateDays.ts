@@ -9,13 +9,13 @@ export const generateDates = () => {
   for (let i = 181-((7-emptyDaysAtStart) % 7); i >= 0; i--) {
     const date = new Date(today)
     date.setDate(today.getDate() - i)
-    dates.push(date.toISOString().split('T')[0])
+    dates.push(date.toLocaleDateString('en-CA'))
   }
 
   for (let i = 1; i <= (7-emptyDaysAtStart) % 7; i++) {
     const date = new Date(today)
     date.setDate(today.getDate() + i)
-    dates.push(date.toISOString().split('T')[0])
+    dates.push(date.toLocaleDateString('en-CA'))
   }
 
   return dates

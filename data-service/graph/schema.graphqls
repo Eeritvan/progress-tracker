@@ -1,3 +1,5 @@
+scalar Time
+
 enum Color {
   darkseagreen,
   lightgreen,
@@ -34,7 +36,7 @@ type Card {
   id: ID!
   name: String!
   desc: String
-  completedDays: [String!]
+  completedDays: [Time!]
   color: Color!
   icon: Icon!
 }
