@@ -35,7 +35,13 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Setup buildx
+      uses: docker/setup-buildx-action@v3
     - name: Build and publish
-      run: |-
-          docker build --tag "eeritvan/tracker-client:$GITHUB_SHA" .
-          docker push "eeritvan/tracker-client:$GITHUB_SHA"
+      uses: docker/build-push-action@v6
+      with:
+        context: ./client
+        push: true
+        tags: |
+          eeritvan/tracker-client:${{ github.sha }}
+          eeritvan/tracker-client:latest
