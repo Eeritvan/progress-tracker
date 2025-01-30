@@ -6,7 +6,7 @@ import useCardListSlice, { Card } from '@/store/cardListStore'
 
 interface RawCardData {
   id: string;
-  name: string;
+  title: string;
   desc: string;
   completedDays: string[];
   color: string;

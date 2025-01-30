@@ -8,7 +8,7 @@ import { generateDates } from '@/utils/generateDays'
 import ControlMenu from './ControlMenu'
 import { useState } from 'react'
 
-const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
+const CardEntry = ({ id, title, desc, completedDays, color, icon }: Card) => {
   const [isOpen, setOpen] = useState(false)
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 })
   const {
@@ -41,7 +41,7 @@ const CardEntry = ({ id, name, desc, completedDays, color, icon }: Card) => {
       }}
     >
       <div className='flex mb-2'>
-        <CardInfo icon={icon} name={name} desc={desc} />
+        <CardInfo icon={icon} title={title} desc={desc} />
         <ReadyButton
           id={id}
           completed={completedDays.has(new Date().toLocaleDateString('en-CA'))}

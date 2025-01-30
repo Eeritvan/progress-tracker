@@ -29,7 +29,7 @@ const iconComponents = {
 
 type CardInfoProps = Omit<Card, 'id' | 'completedDays' | 'color'>
 
-const CardInfo = ({ icon, name, desc }: CardInfoProps) => {
+const CardInfo = ({ icon, title, desc }: CardInfoProps) => {
   const IconComponent = iconComponents[icon]
 
   return (
@@ -40,7 +40,7 @@ const CardInfo = ({ icon, name, desc }: CardInfoProps) => {
         <IconComponent size={24} />
       </div>
       <div className='flex flex-col justify-center min-w-0'>
-        <div className='font-medium truncate'> {name} </div>
+        <div className='font-medium truncate'> {title} </div>
         {desc && <div className='truncate'> {desc} </div>}
       </div>
     </div>

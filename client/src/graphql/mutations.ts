@@ -53,19 +53,19 @@ export const registerMutation = usersGraffle.gql(`
 
 export const createCardMutation = dataGraffle.gql(`
   mutation CreateCard(
-    $name: String!,
+    $title: String!,
     $desc: String!,
     $color: Color!,
     $icon: Icon!
   ) {
     createCard(input: {
-      name: $name,
+      title: $title,
       desc: $desc,
       color: $color,
       icon: $icon,
     }) {
       id
-      name
+      title
       desc
       completedDays
       color

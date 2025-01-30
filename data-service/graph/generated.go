@@ -54,7 +54,7 @@ type ComplexityRoot struct {
 		Desc          func(childComplexity int) int
 		ID            func(childComplexity int) int
 		Icon          func(childComplexity int) int
-		Name          func(childComplexity int) int
+		Title         func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -135,12 +135,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Card.Icon(childComplexity), true
 
-	case "Card.name":
-		if e.complexity.Card.Name == nil {
+	case "Card.title":
+		if e.complexity.Card.Title == nil {
 			break
 		}
 
-		return e.complexity.Card.Name(childComplexity), true
+		return e.complexity.Card.Title(childComplexity), true
 
 	case "Mutation.completeDay":
 		if e.complexity.Mutation.CompleteDay == nil {
@@ -542,8 +542,8 @@ func (ec *executionContext) fieldContext_Card_id(_ context.Context, field graphq
 	return fc, nil
 }
 
-func (ec *executionContext) _Card_name(ctx context.Context, field graphql.CollectedField, obj *model.Card) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Card_name(ctx, field)
+func (ec *executionContext) _Card_title(ctx context.Context, field graphql.CollectedField, obj *model.Card) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Card_title(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -556,7 +556,7 @@ func (ec *executionContext) _Card_name(ctx context.Context, field graphql.Collec
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
+		return obj.Title, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -573,7 +573,7 @@ func (ec *executionContext) _Card_name(ctx context.Context, field graphql.Collec
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Card_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Card_title(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Card",
 		Field:      field,
@@ -797,8 +797,8 @@ func (ec *executionContext) fieldContext_Mutation_createCard(ctx context.Context
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Card_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Card_name(ctx, field)
+			case "title":
+				return ec.fieldContext_Card_title(ctx, field)
 			case "desc":
 				return ec.fieldContext_Card_desc(ctx, field)
 			case "completedDays":
@@ -1075,8 +1075,8 @@ func (ec *executionContext) fieldContext_Query_getCards(_ context.Context, field
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Card_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Card_name(ctx, field)
+			case "title":
+				return ec.fieldContext_Card_title(ctx, field)
 			case "desc":
 				return ec.fieldContext_Card_desc(ctx, field)
 			case "completedDays":
@@ -3001,20 +3001,20 @@ func (ec *executionContext) unmarshalInputNewCard(ctx context.Context, obj any) 
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "desc", "color", "icon"}
+	fieldsInOrder := [...]string{"title", "desc", "color", "icon"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "name":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
 			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Name = data
+			it.Title = data
 		case "desc":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("desc"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
@@ -3066,8 +3066,8 @@ func (ec *executionContext) _Card(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "name":
-			out.Values[i] = ec._Card_name(ctx, field, obj)
+		case "title":
+			out.Values[i] = ec._Card_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

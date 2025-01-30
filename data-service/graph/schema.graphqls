@@ -34,7 +34,7 @@ enum Icon {
 
 type Card {
   id: ID!
-  name: String!
+  title: String!
   desc: String
   completedDays: [Time!]
   color: Color!
@@ -46,7 +46,7 @@ type Query {
 }
 
 input NewCard {
-  name: String!
+  title: String!
   desc: String
   color: Color!
   icon: Icon!

@@ -37,19 +37,19 @@ func DB_CreateCard(ctx context.Context, db DBConnection, username string, input 
 	var card model.Card
 	if err := db.QueryRow(ctx, `
 		WITH inserted AS (
-			INSERT INTO cards (owner, name, description, color_id, icon_id)
+			INSERT INTO cards (owner, title, description, color_id, icon_id)
         	SELECT $1, $2, $3, 
             	(SELECT id FROM colors WHERE name = $4),
             	(SELECT id FROM icons WHERE name = $5)
-			RETURNING id, name, description, completed_days, color_id, icon_id
+			RETURNING id, title, description, completed_days, color_id, icon_id
 		)
-		SELECT i.id, i.name, i.description, i.completed_days, c.name, ic.name
+		SELECT i.id, i.title, i.description, i.completed_days, c.name, ic.name
 		FROM inserted i
 		LEFT JOIN colors c ON i.color_id = c.id
 		LEFT JOIN icons ic ON i.icon_id = ic.id
-	`, username, input.Name, input.Desc, input.Color, input.Icon).Scan(
+	`, username, input.Title, input.Desc, input.Color, input.Icon).Scan(
 		&card.ID,
-		&card.Name,
+		&card.Title,
 		&card.Desc,
 		&card.CompletedDays,
 		&card.Color,
@@ -154,7 +154,7 @@ func DB_GetCards(ctx context.Context, db DBConnection, username string) ([]*mode
 
 	var cards []*model.Card
 	rows, err := db.Query(ctx, `
-		SELECT C.id, C.name, C.description, C.completed_days, COL.name, I.name
+		SELECT C.id, C.title, C.description, C.completed_days, COL.name, I.name
 		FROM cards C
 		LEFT JOIN colors COL ON C.color_id=COL.id
 		LEFT JOIN icons I ON C.icon_id=I.id
@@ -169,7 +169,7 @@ func DB_GetCards(ctx context.Context, db DBConnection, username string) ([]*mode
 		var card model.Card
 		if err := rows.Scan(
 			&card.ID,
-			&card.Name,
+			&card.Title,
 			&card.Desc,
 			&card.CompletedDays,
 			&card.Color,

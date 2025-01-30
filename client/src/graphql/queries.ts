@@ -26,7 +26,7 @@ export const getCardsQuery = dataGraffle.gql(`
   query GetCards {
     getCards {
       id
-      name
+      title
       desc
       completedDays
       color

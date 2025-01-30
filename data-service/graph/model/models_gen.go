@@ -11,7 +11,7 @@ import (
 
 type Card struct {
 	ID            string       `json:"id"`
-	Name          string       `json:"name"`
+	Title         string       `json:"title"`
 	Desc          *string      `json:"desc,omitempty"`
 	CompletedDays []*time.Time `json:"completedDays,omitempty"`
 	Color         Color        `json:"color"`
@@ -22,7 +22,7 @@ type Mutation struct {
 }
 
 type NewCard struct {
-	Name  string  `json:"name"`
+	Title string  `json:"title"`
 	Desc  *string `json:"desc,omitempty"`
 	Color Color   `json:"color"`
 	Icon  Icon    `json:"icon"`

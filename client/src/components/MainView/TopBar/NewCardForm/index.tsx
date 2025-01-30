@@ -51,7 +51,7 @@ const NewCardform = () => {
     mutationFn: async (data: CardData) => {
       const result = await createCardMutation
         .send({
-          name: data.title,
+          title: data.title,
           desc: data.desc || '',
           color: data.color,
           icon: data.icon
@@ -63,7 +63,7 @@ const NewCardform = () => {
     onSuccess: (data) => {
       const newCard: Card = {
         id: data.id,
-        name: data.name,
+        title: data.title,
         desc: data.desc,
         completedDays: new Set<string>(data.completedDays),
         color: data.color,
