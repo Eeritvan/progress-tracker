@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - 'client/**'
+    paths:
+      - 'client/**'
 
 jobs:
-  testing:
+  test:
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -25,7 +25,7 @@ jobs:
 
 
   deploy:
-    needs: testing
+    needs: test
     runs-on: ubuntu-22.04
     defaults:
       run:
