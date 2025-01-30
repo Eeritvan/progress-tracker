@@ -1,3 +1,5 @@
+[![data-service pipeline](https://github.com/Eeritvan/tracker/actions/workflows/data-service.yml/badge.svg)](https://github.com/Eeritvan/tracker/actions/workflows/data-service.yml)
+
 ## Prerequisites
 - Go 1.23.4+
 - PostgreSQL database
