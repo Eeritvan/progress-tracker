@@ -21,13 +21,17 @@ import (
 const defaultPort = "8081"
 
 func main() {
-	godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
 
 	ctx := context.Background()
 
 	DB := db.ConnectToDB(ctx)
 	if DB != nil {
-		db.CheckForTable(DB, ctx)
+		if err := db.CheckForTable(DB, ctx); err != nil {
+			log.Fatalf("Checking for table failed: %v", err)
+		}
 		defer DB.Close(ctx)
 	}
 

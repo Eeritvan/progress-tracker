@@ -6,6 +6,10 @@ import (
 	"strings"
 )
 
+type contextKey string
+
+const authTokenKey contextKey = "authToken"
+
 func AuthHeaderMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
@@ -27,7 +31,7 @@ func AuthHeaderMiddleware(next http.Handler) http.Handler {
 		}
 
 		parsedAuth := parts[1]
-		ctx := context.WithValue(r.Context(), "authToken", parsedAuth)
+		ctx := context.WithValue(r.Context(), authTokenKey, parsedAuth)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
