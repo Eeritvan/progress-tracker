@@ -26,7 +26,7 @@ A simple progress tracking app with the following features:
 - Each service communicates via GraphQL
 
 rough highlevel overview of the application:
-```
+```mermaid
 C4Context
     title Progress tracking application
     Boundary(app, "The application") {
