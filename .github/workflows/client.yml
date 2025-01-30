@@ -1,4 +1,4 @@
-name: Client Pipeline
+name: client pipeline
 
 on:
   push:
