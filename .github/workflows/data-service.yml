@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: users-service
+        working-directory: data-service
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-go@v5

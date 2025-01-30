@@ -68,3 +68,5 @@ jobs:
           eeritvan/tracker-users-svc:latest
         cache-from: type=registry,ref=eeritvan/tracker-users-svc:buildcache
         cache-to: type=registry,ref=eeritvan/tracker-users-svc:buildcache,mode=max
+        file: ./users-service/Dockerfile
+        context-path: ./users-service/go.sum

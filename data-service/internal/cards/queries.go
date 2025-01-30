@@ -39,7 +39,6 @@ func DB_CreateCard(ctx context.Context, db DBConnection, username string, input 
 	if err != nil {
 		return nil, ErrTransactionBeginFail
 	}
-	defer rollbackTransaction(ctx, tx)
 
 	var card model.Card
 	if err := db.QueryRow(ctx, `
@@ -66,6 +65,7 @@ func DB_CreateCard(ctx context.Context, db DBConnection, username string, input 
 	}
 
 	if err := tx.Commit(ctx); err != nil {
+		rollbackTransaction(ctx, tx)
 		return nil, ErrTransactionCommitFail
 	}
 
@@ -80,7 +80,6 @@ func DB_DeleteCard(ctx context.Context, db DBConnection, username string, input 
 	if err != nil {
 		return false, ErrTransactionBeginFail
 	}
-	defer rollbackTransaction(ctx, tx)
 
 	if _, err := db.Exec(ctx, `
 		DELETE FROM cards
@@ -90,6 +89,7 @@ func DB_DeleteCard(ctx context.Context, db DBConnection, username string, input 
 	}
 
 	if err := tx.Commit(ctx); err != nil {
+		rollbackTransaction(ctx, tx)
 		return false, ErrTransactionCommitFail
 	}
 
@@ -104,7 +104,6 @@ func DB_CompleteDay(ctx context.Context, db DBConnection, username string, input
 	if err != nil {
 		return false, ErrTransactionBeginFail
 	}
-	defer rollbackTransaction(ctx, tx)
 
 	currentTime := time.Now().Format("2006-01-02")
 	var isCompleted bool
@@ -121,6 +120,7 @@ func DB_CompleteDay(ctx context.Context, db DBConnection, username string, input
 	}
 
 	if err := tx.Commit(ctx); err != nil {
+		rollbackTransaction(ctx, tx)
 		return false, ErrTransactionCommitFail
 	}
 
@@ -135,7 +135,6 @@ func DB_ReorderCards(ctx context.Context, db DBConnection, username string, inpu
 	if err != nil {
 		return false, ErrTransactionBeginFail
 	}
-	defer rollbackTransaction(ctx, tx)
 
 	for i, id := range input {
 		_, err := db.Exec(ctx, `
@@ -149,6 +148,7 @@ func DB_ReorderCards(ctx context.Context, db DBConnection, username string, inpu
 	}
 
 	if err := tx.Commit(ctx); err != nil {
+		rollbackTransaction(ctx, tx)
 		return false, ErrTransactionCommitFail
 	}
 

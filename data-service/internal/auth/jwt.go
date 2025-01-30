@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"data-service/internal/middleware"
+
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -14,7 +16,7 @@ type CustomClaims struct {
 }
 
 func GetAuthToken(ctx context.Context) string {
-	token, _ := ctx.Value("authToken").(string)
+	token, _ := ctx.Value(middleware.AuthTokenKey).(string)
 	return token
 }
 

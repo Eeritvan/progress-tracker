@@ -58,7 +58,6 @@ func UpdateUserTotp(ctx context.Context, db DBConnection, username string, totpS
 	if err != nil {
 		return ErrTransactionBeginFail
 	}
-	defer rollbackTransaction(ctx, tx)
 
 	_, err = db.Exec(ctx, `
         UPDATE users 
@@ -70,6 +69,7 @@ func UpdateUserTotp(ctx context.Context, db DBConnection, username string, totpS
 	}
 
 	if err := tx.Commit(ctx); err != nil {
+		rollbackTransaction(ctx, tx)
 		return ErrTransactionCommitFail
 	}
 
@@ -84,7 +84,6 @@ func CreateUser(ctx context.Context, db DBConnection, username string, password 
 	if err != nil {
 		return nil, ErrTransactionBeginFail
 	}
-	defer rollbackTransaction(ctx, tx)
 
 	var user model.User
 	if err := db.QueryRow(ctx, `
@@ -112,6 +111,7 @@ func CreateUser(ctx context.Context, db DBConnection, username string, password 
 	}
 
 	if err := tx.Commit(ctx); err != nil {
+		rollbackTransaction(ctx, tx)
 		return nil, ErrTransactionCommitFail
 	}
 
