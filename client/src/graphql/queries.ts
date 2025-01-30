@@ -10,12 +10,16 @@ const getAuthToken = (): string => {
 
 const dataGraffle = Graffle
   .create({ output: { envelope: { errors: { execution: true } } } })
-  .transport({
-    url: import.meta.env.VITE_DATA_SVC,
-    headers: {
-      authorization:
-        `Bearer ${getAuthToken()}`
-    }
+  .transport({ url: import.meta.env.VITE_DATA_SVC })
+  .anyware(({ pack }) => {
+    return pack({
+      input: {
+        ...pack.input,
+        headers: {
+          authorization: `Bearer ${getAuthToken()}`
+        }
+      }
+    })
   })
 
 export const getCardsQuery = dataGraffle.gql(`
