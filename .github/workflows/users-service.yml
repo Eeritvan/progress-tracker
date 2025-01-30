@@ -1,4 +1,4 @@
-name: Check user-service
+name: user-service pipeline
 
 on:
   push:
@@ -8,6 +8,18 @@ on:
       - 'users-service/**'
 
 jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v5
+      with:
+        go-version: '1.23.4'
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: latest
+
   test:
     runs-on: ubuntu-22.04
     defaults:
@@ -29,7 +41,7 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
 
   deploy:
-    needs: test
+    needs: [lint, test]
     runs-on: ubuntu-22.04
     defaults:
       run:
