@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 	"users-service/graph/model"
 
@@ -26,6 +27,12 @@ type DBConnection interface {
 	QueryRow(ctx context.Context, query string, args ...interface{}) pgx.Row
 	Begin(ctx context.Context) (pgx.Tx, error)
 	Exec(ctx context.Context, query string, args ...interface{}) (pgconn.CommandTag, error)
+}
+
+func rollbackTransaction(ctx context.Context, tx pgx.Tx) {
+	if err := tx.Rollback(ctx); err != nil {
+		log.Fatalf("rollback failed: %v\n", err)
+	}
 }
 
 func QueryUser(ctx context.Context, db DBConnection, username string) (*model.User, error) {
@@ -51,7 +58,7 @@ func UpdateUserTotp(ctx context.Context, db DBConnection, username string, totpS
 	if err != nil {
 		return ErrTransactionBeginFail
 	}
-	defer tx.Rollback(ctx)
+	defer rollbackTransaction(ctx, tx)
 
 	_, err = db.Exec(ctx, `
         UPDATE users 
@@ -77,7 +84,7 @@ func CreateUser(ctx context.Context, db DBConnection, username string, password 
 	if err != nil {
 		return nil, ErrTransactionBeginFail
 	}
-	defer tx.Rollback(ctx)
+	defer rollbackTransaction(ctx, tx)
 
 	var user model.User
 	if err := db.QueryRow(ctx, `
