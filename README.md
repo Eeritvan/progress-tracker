@@ -54,13 +54,25 @@ C4Context
 - `users-service/` - Go microservice for user authentication
 
 ## Installation
-### Prerequisites
+### Local
+**Prerequisites**
 - Node.js 18+ for frontend
 - Go 1.24.3+ for backend services
 - PostgreSQL databases for each service
-### Local
-- todo
+
+1. Clone this repository
+
 ### Docker Compose
-- todo
+
+1. Clone this repository
+2. Ensure Docker is installed
+3. Create .env with the following content
+    ```bash
+    JWT_KEY=<YOUR_KEY>
+    POSTGRES_PASSWORD=<YOUR_PASSWORD>
+    ```
+4. Run `docker compose up`
+5. The app should be available in url: `localhost:4173`
+
 ### Kubernetes
 - todo
