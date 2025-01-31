@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  client:
+    image: eeritvan/tracker-client:latest
+    container_name: client
+    ports:
+      - "4173:80"
+    environment:
+      - APP_USERS_SVC=http://users-service:3000
+      - APP_DATA_SVC=http://data-service:3000
+
+  users-service:
+    image: eeritvan/tracker-users-svc:latest
+    container_name: users-svc
+    environment:
+      - DB_URL=postgresql://postgres:${POSTGRES_PASSWORD}@users-db:5432/postgres
+      - JWT_KEY=${JWT_KEY}
+      - PORT=3000
+    depends_on:
+      - users-db
+    restart: on-failure
+
+  data-service:
+    image: eeritvan/tracker-data-svc:latest
+    container_name: data-svc
+    environment:
+      - DB_URL=postgresql://postgres:${POSTGRES_PASSWORD}@data-db:5432/postgres
+      - JWT_KEY=${JWT_KEY}
+      - PORT=3000
+    depends_on:
+      - data-db
+    restart: on-failure
+
+  users-db:
+    image: postgres:alpine
+    container_name: users-db
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  data-db:
+    image: postgres:alpine
+    container_name: data-db
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

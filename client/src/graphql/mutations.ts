@@ -10,11 +10,11 @@ const getAuthToken = (): string => {
 
 const usersGraffle = Graffle
   .create({ output: { envelope: { errors: { execution: true } } } })
-  .transport({ url: import.meta.env.VITE_USERS_SVC })
+  .transport({ url: '/users/query' })
 
 const dataGraffle = Graffle
   .create({ output: { envelope: { errors: { execution: true } } } })
-  .transport({ url: import.meta.env.VITE_DATA_SVC })
+  .transport({ url: '/data/query' })
   .anyware(({ pack }) => {
     return pack({
       input: {
