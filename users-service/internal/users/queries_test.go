@@ -100,6 +100,7 @@ func TestUpdateUserTotp(t *testing.T) {
 					WithArgs("testuser", "testtotp").
 					WillReturnResult(pgxmock.NewResult("UPDATE", 1))
 				mockDB.ExpectCommit()
+				mockDB.ExpectRollback()
 			},
 			wantErr: nil,
 		},
@@ -115,6 +116,7 @@ func TestUpdateUserTotp(t *testing.T) {
 					WithArgs("testuser", "").
 					WillReturnResult(pgxmock.NewResult("UPDATE", 1))
 				mockDB.ExpectCommit()
+				mockDB.ExpectRollback()
 			},
 			wantErr: nil,
 		},
@@ -158,6 +160,7 @@ func TestCreateUser(t *testing.T) {
 					WithArgs("testuser", []byte("hashed_password")).
 					WillReturnRows(rows)
 				mockDB.ExpectCommit()
+				mockDB.ExpectRollback()
 			},
 			want: &model.User{
 				Username: "testuser",
