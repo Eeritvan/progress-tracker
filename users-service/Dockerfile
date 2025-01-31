@@ -12,5 +12,6 @@ RUN go mod download && \
 FROM scratch
 
 COPY --from=build /build/users-service /users-service
+COPY --from=build /build/schema.sql /schema.sql
 
 CMD ["/users-service"]
