@@ -10,7 +10,7 @@ const getAuthToken = (): string => {
 
 const dataGraffle = Graffle
   .create({ output: { envelope: { errors: { execution: true } } } })
-  .transport({ url: '/data/query' })
+  .transport({ url: import.meta.env.VITE_DATA_SVC || '/data/query' })
   .anyware(({ pack }) => {
     return pack({
       input: {
