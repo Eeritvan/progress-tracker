@@ -3,6 +3,7 @@ import { defineConfig, type PluginOption } from 'vite'
 import react from '@vitejs/plugin-react'
 const ReactCompilerConfig = { target: '18' }
 import tailwindcss from '@tailwindcss/vite'
+import 'vitest/config'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -30,5 +31,10 @@ export default defineConfig({
         }
       }
     }
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './vitest.setup.ts'
   }
 })

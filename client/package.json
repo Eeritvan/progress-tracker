@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "clean": "rimraf ./dist",
     "lint": "eslint .",
+    "test": "vitest run",
     "start": "vite preview",
     "build:start": "bun run build && bun run start"
   },
@@ -34,6 +35,10 @@
     "@eslint/js": "^9.19.0",
     "@tailwindcss/vite": "^4.0.0",
     "@tanstack/eslint-plugin-query": "^5.64.2",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.10.10",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
@@ -45,11 +50,13 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
+    "jsdom": "^26.0.0",
     "react-compiler-runtime": "^19.0.0-beta-e552027-20250112",
     "rimraf": "^6.0.1",
     "tailwindcss": "^4.0.0",
     "typescript": "~5.6.3",
     "typescript-eslint": "^8.21.0",
-    "vite": "^6.0.11"
+    "vite": "^6.0.11",
+    "vitest": "^3.0.4"
   }
 }
