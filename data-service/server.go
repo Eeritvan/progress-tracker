@@ -22,7 +22,7 @@ const defaultPort = "8081"
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
+		log.Printf("Error loading .env file: %v", err)
 	}
 
 	ctx := context.Background()
