@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'users-service/**'
+    # paths:
+    #   - 'users-service/**'
 
 jobs:
   lint:
@@ -45,6 +45,10 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+        flags: users-service
+        name: users-service-coverage
+        directory: ./users-service
+        fail_ci_if_error: true
 
   deploy:
     needs: [lint, test]
