@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import FormField from './FormField'
 import '@testing-library/jest-dom'
+import { vi } from 'vitest'
 
 describe('<FormField /> component', () => {
   const mock = vi.fn()

@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import IconSelector from './index'
 import '@testing-library/jest-dom'
+import { vi } from 'vitest'
 
 describe('<IconSelector /> component', () => {
   const mock = vi.fn()

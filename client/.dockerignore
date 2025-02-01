@@ -15,3 +15,4 @@ helm-charts
 coverage*
 stats.html
 eslint.config.js
+coverage

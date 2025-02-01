@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import ColorSelector from './index'
 import '@testing-library/jest-dom'
+import { vi } from 'vitest'
 
 describe('<ColorSelector /> component', () => {
   const mock = vi.fn()
