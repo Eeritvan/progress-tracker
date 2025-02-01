@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 const ReactCompilerConfig = { target: '18' }
 import tailwindcss from '@tailwindcss/vite'
 import 'vitest/config'
+import { codecovVitePlugin } from '@codecov/vite-plugin'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -15,7 +16,12 @@ export default defineConfig({
         ]
       }
     }) as PluginOption,
-    tailwindcss()
+    tailwindcss(),
+    codecovVitePlugin({
+      enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+      bundleName: 'tracker-client',
+      uploadToken: process.env.CODECOV_TOKEN
+    })
   ],
   resolve: {
     alias: {
