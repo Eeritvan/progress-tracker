@@ -11,7 +11,7 @@ export default tseslint.config(
   tseslint.configs.strict,
   tseslint.configs.stylistic,
   ...pluginQuery.configs['flat/recommended'],
-  { ignores: ['dist', 'playwright.config.ts', 'e2e'] },
+  { ignores: ['dist', 'playwright.config.ts', 'e2e', 'coverage'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
