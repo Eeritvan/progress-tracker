@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'data-service/**'
+    # paths:
+    #   - 'data-service/**'
 
 jobs:
   lint:
@@ -42,28 +42,63 @@ jobs:
     - name: Run Unit Tests
       run: go test ./...
 
-  deploy:
+  build:
     needs: [lint, test]
     runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: data-service
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Setup buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./data-service
+          push: false
+          tags: |
+            eeritvan/tracker-data-svc:${{ github.sha }}
+            eeritvan/tracker-data-svc:latest
+          cache-from: type=registry,ref=eeritvan/tracker-data-svc:buildcache
+          cache-to: type=registry,ref=eeritvan/tracker-data-svc:buildcache,mode=max
+          outputs: type=docker,dest=${{ runner.temp }}/data-svc-image.tar
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-svc-image
+          path: ${{ runner.temp }}/data-svc-image.tar
+
+  e2e:
+    needs: [build]
+    uses: ./.github/workflows/e2e.yml
+
+  deploy:
+    needs: [build, e2e]
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: data-service
+    steps:
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Setup buildx
-      uses: docker/setup-buildx-action@v3
-    - name: Build and publish
-      uses: docker/build-push-action@v6
+    - name: Download image artifact
+      uses: actions/download-artifact@v4
       with:
-        context: ./data-service
-        push: true
-        tags: |
-          eeritvan/tracker-data-svc:${{ github.sha }}
-          eeritvan/tracker-data-svc:latest
-        cache-from: type=registry,ref=eeritvan/tracker-data-svc:buildcache
-        cache-to: type=registry,ref=eeritvan/tracker-data-svc:buildcache,mode=max
+        name: data-svc-image
+        path: ${{ runner.temp }}
+    - name: Load image
+      run: |
+        docker load --input ${{ runner.temp }}/data-svc-image.tar
+    - name: Push Docker image
+      run: |
+        docker push eeritvan/data-users-svc:${{ github.sha }}
+        docker push eeritvan/data-users-svc:latest
