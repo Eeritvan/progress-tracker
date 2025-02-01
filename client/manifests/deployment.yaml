@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client
+spec:
+  selector:
+    matchLabels:
+      app: client
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+      - name: client
+        image: CLIENT/IMAGE
+        ports:
+        - containerPort: 80
+        env:
+        - name: APP_USERS_SVC
+          value: http://users-service:3000
+        - name: APP_DATA_SVC
+          value: http://data-service:3000
+        resources:
+          limits:
+            cpu: "150m"
+            memory: "150Mi"

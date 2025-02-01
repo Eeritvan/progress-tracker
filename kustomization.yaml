@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: tracker-app
+resources:
+- client/manifests/namespace.yaml
+- users-service/manifests/secret.yaml
+- data-service/manifests/secret.yaml
+- users-service/manifests/users-svc-db.yaml
+- users-service/manifests/deployment.yaml
+- users-service/manifests/service.yaml
+- data-service/manifests/data-svc-db.yaml
+- data-service/manifests/deployment.yaml
+- data-service/manifests/service.yaml
+- client/manifests/deployment.yaml
+- client/manifests/service.yaml
+- client/manifests/ingress.yaml
+
+images:
+- name: CLIENT/IMAGE
+  newName: eeritvan/tracker-client
+  newTag: latest
+- name: DATA-SVC/IMAGE
+  newName: eeritvan/tracker-data-svc
+  newTag: latest
+- name: USERS-SVC/IMAGE
+  newName: eeritvan/tracker-users-svc
+  newTag: latest

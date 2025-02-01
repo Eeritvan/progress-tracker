@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-svc-dep
+spec:
+  selector:
+    matchLabels:
+      app: users-service
+  template:
+    metadata:
+      labels:
+        app: users-service
+    spec:
+      containers:
+      - name: users-service
+        image: USERS-SVC/IMAGE
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: users-svc-secret
+              key: DB_PASSWORD
+        - name: DB_URL
+          value: "postgres://postgres:$(DB_PASSWORD)@users-svc-db:5432/postgres"
+        - name: JWT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: users-svc-secret
+              key: JWT_KEY
+        - name: PORT
+          value: "3000"
+        resources:
+          limits:
+            cpu: "150m"
+            memory: "150Mi"

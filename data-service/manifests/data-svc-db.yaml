@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: data-svc-stset
+spec:
+  serviceName: data-svc-db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-svc-db
+  template:
+    metadata:
+      labels:
+        app: data-svc-db
+    spec:
+      volumes:
+        - name: config
+          configMap:
+            name: config
+
+      containers:
+        - name: data-svc-db
+          image: postgres:alpine
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: data-svc-secret
+                  key: DB_PASSWORD
+          ports:
+          - containerPort: 5432
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+          resources:
+            limits:
+              cpu: "150m"
+              memory: "150Mi"
+        
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 10Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-svc-db
+spec:
+  selector:
+    app: data-svc-db
+  ports:
+  - port: 5432
+    targetPort: 5432

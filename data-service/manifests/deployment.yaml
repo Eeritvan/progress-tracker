@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-svc-dep
+spec:
+  selector:
+    matchLabels:
+      app: data-service
+  template:
+    metadata:
+      labels:
+        app: data-service
+    spec:
+      containers:
+      - name: data-service
+        image: DATA-SVC/IMAGE
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: data-svc-secret
+              key: DB_PASSWORD
+        - name: DB_URL
+          value: "postgres://postgres:$(DB_PASSWORD)@data-svc-db:5432/postgres"
+        - name: JWT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: data-svc-secret
+              key: JWT_KEY
+        - name: PORT
+          value: "3000"
+        resources:
+          limits:
+            cpu: "150m"
+            memory: "150Mi"
