@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  client:
+    image: eeritvan/tracker-client:ci-latest
+  
+  users-service:
+    image: eeritvan/tracker-users-svc:ci-latest
+
+  data-service:
+    image: eeritvan/tracker-data-svc:ci-latest

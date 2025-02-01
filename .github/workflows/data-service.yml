@@ -101,5 +101,5 @@ jobs:
         docker load --input ${{ runner.temp }}/data-svc-image.tar
     - name: Push Docker image
       run: |
-        docker push eeritvan/data-users-svc:${{ github.sha }}
-        docker push eeritvan/data-users-svc:latest
+        docker push eeritvan/tracker-data-svc:${{ github.sha }}
+        docker push eeritvan/tracker-data-svc:latest
