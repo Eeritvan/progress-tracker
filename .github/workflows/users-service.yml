@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - 'users-service/**'
+    paths:
+      - 'users-service/**'
 
 jobs:
   lint:
@@ -87,7 +87,7 @@ jobs:
     uses: ./.github/workflows/e2e.yml
 
   deploy:
-    needs: [build, e2e]
+    needs: [e2e]
     runs-on: ubuntu-22.04
     defaults:
       run:
