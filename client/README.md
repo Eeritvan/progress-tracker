@@ -5,6 +5,8 @@
 - [Environment variables](#env-variables) set in .env file
 
 ## Installation
+> \* check for env variables below \
+> \** You can use any package manager such as NPM instead of Bun
 ### Development
 ```bash
 # Install dependencies
@@ -18,8 +20,14 @@ The app will be available at http://localhost:5173
 
 ### Building / Production
 ```bash
+# Install dependencies
+bun install 
+
 # Run linting
 bun run lint
+
+# Run unit-tests
+bun run test
 
 # Build for production
 bun run build
@@ -30,11 +38,6 @@ bun run start
 
 The app will be available at http://localhost:4173 \
 Production build will be in dist/ directory.
-
-### Docker
-```bash
-# todo
-```
 
 ## Env variables
 Create a .env file with:
