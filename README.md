@@ -48,7 +48,8 @@ C4Context
 
 ```
 
-## Project Structure (Monorepo)
+## Project Structure
+the project is a monorepo containing the following services:
 - `client/` - React frontend application
 - `data-service/` - Go microservice for data management
 - `users-service/` - Go microservice for user authentication
