@@ -10,6 +10,7 @@
 # Download dependencies
 go mod download
 ```
+> \* check .env variables below
 
 ### Running the Service
 **Development**
@@ -21,11 +22,6 @@ go run -tags dev .
 go run .
 ```
 
-**Running with docker**
-```bash
-#todo
-```
-
 ## API Endpoints
 **GraphQL Endpoint**
 - '/query' - Main GraphQL endpoint for all operations
@@ -35,7 +31,14 @@ go run .
 
 ## Building
 ```bash
-#todo
+# Download dependencies
+go mod download
+
+# run tests
+go test ./...
+
+# build step
+go build
 ```
 
 ## Environment Variables
