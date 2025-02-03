@@ -1,113 +1,113 @@
-name: user-service pipeline
+# name: user-service pipeline
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'users-service/**'
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - 'users-service/**'
 
-jobs:
-  lint:
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: users-service
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-go@v5
-      with:
-        go-version: '1.23.4'
-        cache-dependency-path: users-service/go.sum
-    - name: golangci-lint
-      uses: golangci/golangci-lint-action@v6
-      with:
-        version: latest
-        working-directory: users-service
+# jobs:
+#   lint:
+#     runs-on: ubuntu-22.04
+#     defaults:
+#       run:
+#         working-directory: users-service
+#     steps:
+#     - uses: actions/checkout@v4
+#     - uses: actions/setup-go@v5
+#       with:
+#         go-version: '1.23.4'
+#         cache-dependency-path: users-service/go.sum
+#     - name: golangci-lint
+#       uses: golangci/golangci-lint-action@v6
+#       with:
+#         version: latest
+#         working-directory: users-service
 
-  test:
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: users-service
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.23.4'
-        cache-dependency-path: users-service/go.sum
-    - name: Install dependencies
-      run: go mod download
-    - name: Run Unit Tests
-      run: go test -covermode=atomic -coverprofile=coverage.out $(cat testdirs.txt)
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        flags: users-service
-        name: users-service-coverage
-        directory: ./users-service
-        fail_ci_if_error: true
+#   test:
+#     runs-on: ubuntu-22.04
+#     defaults:
+#       run:
+#         working-directory: users-service
+#     steps:
+#     - uses: actions/checkout@v4
+#     - name: Setup Go
+#       uses: actions/setup-go@v5
+#       with:
+#         go-version: '1.23.4'
+#         cache-dependency-path: users-service/go.sum
+#     - name: Install dependencies
+#       run: go mod download
+#     - name: Run Unit Tests
+#       run: go test -covermode=atomic -coverprofile=coverage.out $(cat testdirs.txt)
+#     - name: Upload coverage reports to Codecov
+#       uses: codecov/codecov-action@v5
+#       with:
+#         token: ${{ secrets.CODECOV_TOKEN }}
+#         flags: users-service
+#         name: users-service-coverage
+#         directory: ./users-service
+#         fail_ci_if_error: true
 
-  build:
-    needs: [lint, test]
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: users-service
-    steps:
-      - uses: actions/checkout@v4
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Setup buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build image
-        uses: docker/build-push-action@v6
-        with:
-          context: ./users-service
-          push: false
-          tags: |
-            eeritvan/tracker-users-svc:${{ github.sha }}
-            eeritvan/tracker-users-svc:latest
-          cache-from: type=registry,ref=eeritvan/tracker-users-svc:buildcache
-          cache-to: type=registry,ref=eeritvan/tracker-users-svc:buildcache,mode=max
-          outputs: type=docker,dest=${{ runner.temp }}/users-svc-image.tar
-      - name: Upload image artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: users-svc-image
-          path: ${{ runner.temp }}/users-svc-image.tar
+#   build:
+#     needs: [lint, test]
+#     runs-on: ubuntu-22.04
+#     defaults:
+#       run:
+#         working-directory: users-service
+#     steps:
+#       - uses: actions/checkout@v4
+#       - name: Login to Docker Hub
+#         uses: docker/login-action@v3
+#         with:
+#           username: ${{ secrets.DOCKERHUB_USERNAME }}
+#           password: ${{ secrets.DOCKERHUB_TOKEN }}
+#       - name: Setup buildx
+#         uses: docker/setup-buildx-action@v3
+#       - name: Build image
+#         uses: docker/build-push-action@v6
+#         with:
+#           context: ./users-service
+#           push: false
+#           tags: |
+#             eeritvan/tracker-users-svc:${{ github.sha }}
+#             eeritvan/tracker-users-svc:latest
+#           cache-from: type=registry,ref=eeritvan/tracker-users-svc:buildcache
+#           cache-to: type=registry,ref=eeritvan/tracker-users-svc:buildcache,mode=max
+#           outputs: type=docker,dest=${{ runner.temp }}/users-svc-image.tar
+#       - name: Upload image artifact
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: users-svc-image
+#           path: ${{ runner.temp }}/users-svc-image.tar
 
-  e2e:
-    needs: [build]
-    uses: ./.github/workflows/e2e.yml
+#   e2e:
+#     needs: [build]
+#     uses: ./.github/workflows/e2e.yml
 
-  deploy:
-    needs: [e2e]
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: users-service
-    steps:
-    - uses: actions/checkout@v4
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Download image artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: users-svc-image
-        path: ${{ runner.temp }}
-    - name: Load image
-      run: |
-        docker load --input ${{ runner.temp }}/users-svc-image.tar
-    - name: Push Docker image
-      run: |
-        docker push eeritvan/tracker-users-svc:${{ github.sha }}
-        docker push eeritvan/tracker-users-svc:latest
+#   deploy:
+#     needs: [e2e]
+#     runs-on: ubuntu-22.04
+#     defaults:
+#       run:
+#         working-directory: users-service
+#     steps:
+#     - uses: actions/checkout@v4
+#     - name: Login to Docker Hub
+#       uses: docker/login-action@v3
+#       with:
+#         username: ${{ secrets.DOCKERHUB_USERNAME }}
+#         password: ${{ secrets.DOCKERHUB_TOKEN }}
+#     - name: Download image artifact
+#       uses: actions/download-artifact@v4
+#       with:
+#         name: users-svc-image
+#         path: ${{ runner.temp }}
+#     - name: Load image
+#       run: |
+#         docker load --input ${{ runner.temp }}/users-svc-image.tar
+#     - name: Push Docker image
+#       run: |
+#         docker push eeritvan/tracker-users-svc:${{ github.sha }}
+#         docker push eeritvan/tracker-users-svc:latest
