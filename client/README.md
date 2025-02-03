@@ -52,4 +52,3 @@ Create a .env file with:
 - GraphQL
 - React Hook Form
 - Zustand
-

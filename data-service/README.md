@@ -49,4 +49,3 @@ go build
 ## Tech Used
 - GraphQL with 99designs/gqlgen
 - PostgreSQL with jackc/pgx driver
-
