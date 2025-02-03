@@ -2,6 +2,13 @@ name: user-service pipeline
 
 on:
   workflow_call:
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+      CODECOV_TOKEN:
+        required: true
 
 jobs:
   lint:
