@@ -46,7 +46,6 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         flags: client
         name: client-coverage
-        path: client/coverage
         fail_ci_if_error: true
 
   build:
