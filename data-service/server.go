@@ -61,7 +61,7 @@ func main() {
 	handler = middleware.AuthHeaderMiddleware(handler)
 
 	http.Handle("/query", handler)
-	setupPlayground(port)
+	setupMainRoute(port)
 
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

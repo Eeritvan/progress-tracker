@@ -10,7 +10,12 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 )
 
-func setupPlayground(port string) {
+func setupMainRoute(port string) {
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
+
+	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	})
 }

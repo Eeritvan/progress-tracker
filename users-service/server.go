@@ -58,7 +58,7 @@ func main() {
 
 	handler := middleware.CorsMiddleware(srv)
 	http.Handle("/query", handler)
-	setupPlayground(port)
+	setupMainRoute(port)
 
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
