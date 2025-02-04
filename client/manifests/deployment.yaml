@@ -24,5 +24,14 @@ spec:
           value: http://data-service:3000
         resources:
           limits:
-            cpu: "150m"
-            memory: "150Mi"
+            cpu: 150m
+            memory: 150Mi
+          requests:
+            cpu: 1m
+            memory: 1Mi
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 10

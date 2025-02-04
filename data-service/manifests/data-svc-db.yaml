@@ -35,8 +35,11 @@ spec:
               subPath: postgres
           resources:
             limits:
-              cpu: "150m"
-              memory: "150Mi"
+              cpu: 150m
+              memory: 150Mi
+            requests:
+              cpu: 1m
+              memory: 1Mi
         
   volumeClaimTemplates:
   - metadata:
