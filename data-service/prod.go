@@ -3,7 +3,10 @@
 
 package main
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
 func setupMainRoute(port string) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -12,11 +15,17 @@ func setupMainRoute(port string) {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		_, err := w.Write([]byte("OK"))
+		if err != nil {
+			log.Printf("failed to respond: %v", err)
+		}
 	})
 
 	http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		_, err := w.Write([]byte("OK"))
+		if err != nil {
+			log.Printf("failed to respond to health request %v", err)
+		}
 	})
 }
