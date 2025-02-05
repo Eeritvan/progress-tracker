@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: progress-tracker
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: "https://github.com/Eeritvan/progress-tracker"
+    path: "."
+    targetRevision: HEAD
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: tracker-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
