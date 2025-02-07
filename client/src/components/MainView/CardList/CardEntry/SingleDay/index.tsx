@@ -10,12 +10,13 @@ const SingleDay = ({
         style={{ backgroundColor: color }}
       />
       <div className='invisible absolute right-full top-1/2 mr-2 rounded text-sm
-        -translate-y-1/2 bg-iconbg px-2 py-1 shadow-md whitespace-nowrap
-        group-hover:visible'
+        -translate-y-1/2 bg-iconbg/40 backdrop-blur-sm px-2 py-1 shadow-md
+        whitespace-nowrap group-hover:visible'
       >
         <span className='select-none'>{ date }</span>
-        <div className='absolute -right-1 top-1/2 h-2 w-2 -translate-y-1/2
-         rotate-45 bg-iconbg'
+        <div className='absolute -right-1 top-1/2 -translate-y-1/2 w-0 h-0
+          border-t-[4px] border-t-transparent border-l-[4px] border-l-iconbg/60
+          border-b-[4px] border-b-transparent'
         />
       </div>
     </div>
