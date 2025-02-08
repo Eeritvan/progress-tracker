@@ -11,6 +11,10 @@ spec:
       labels:
         app: users-service
     spec:
+      initContainers:
+      - name: wait-for-db
+        image: postgres:alpine
+        command: ['sh', '-c', 'until pg_isready -h users-svc-db -p 5432; do echo waiting for database; sleep 2; done;']
       containers:
       - name: users-service
         image: USERS-SVC/IMAGE
