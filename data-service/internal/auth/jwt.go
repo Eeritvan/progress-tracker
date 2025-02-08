@@ -10,6 +10,11 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+var (
+	errTokenFail    = fmt.Errorf("invalid token claims")
+	errInvalidToken = fmt.Errorf("invalid token")
+)
+
 type CustomClaims struct {
 	Username string `json:"username"`
 	jwt.RegisteredClaims
@@ -29,12 +34,12 @@ func ValidateToken(ctx context.Context) (string, error) {
 	})
 
 	if err != nil {
-		return "", fmt.Errorf("invalid token: %w", err)
+		return "", errInvalidToken
 	}
 
 	claims, ok := token.Claims.(*CustomClaims)
 	if !ok || !token.Valid {
-		return "", fmt.Errorf("invalid token claims")
+		return "", errTokenFail
 	}
 
 	return claims.Username, nil

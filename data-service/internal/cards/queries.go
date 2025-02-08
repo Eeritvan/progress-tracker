@@ -3,6 +3,7 @@ package cards
 import (
 	"context"
 	"data-service/graph/model"
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -21,6 +22,8 @@ type DBConnection interface {
 }
 
 var (
+	ErrCardCreationFailed    = fmt.Errorf("error creating card")
+	ErrCardExists            = fmt.Errorf("A card with same name already exists")
 	ErrTransactionBeginFail  = fmt.Errorf("failed to begin transaction")
 	ErrTransactionCommitFail = fmt.Errorf("failed to commit transaction")
 )
@@ -63,6 +66,15 @@ func DB_CreateCard(ctx context.Context, db DBConnection, username string, input 
 		&card.Color,
 		&card.Icon,
 	); err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			switch pgErr.Code {
+			case "23505":
+				return nil, ErrCardExists
+			default:
+				return nil, ErrCardCreationFailed
+			}
+		}
 		return nil, err
 	}
 
@@ -201,11 +213,22 @@ func DB_ResetAllCards(ctx context.Context, db DBConnection, username string) (bo
 	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
+	tx, err := db.Begin(ctx)
+	if err != nil {
+		return false, err
+	}
+
+	defer rollbackTransaction(ctx, tx)
+
 	if _, err := db.Exec(ctx, `
 		DELETE FROM cards
 		WHERE owner = $1
 	`, username); err != nil {
 		return false, err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return false, ErrTransactionCommitFail
 	}
 
 	return true, nil
