@@ -21,7 +21,7 @@ A simple progress tracking app with the following features:
 > [!NOTE]
 > The app doesn't use https so please don't use real information if you decide to register or login for your safety.
 
-Available at: [http://35.227.233.255/](http://35.227.233.255/)
+Available at: [http://34.54.98.20/](http://34.54.98.20/)
 
 ## Tech Used
 - The frontend is made with Vite and React
