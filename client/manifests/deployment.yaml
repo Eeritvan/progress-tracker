@@ -16,9 +16,23 @@ spec:
       - name: wait-for-users-svc
         image: curlimages/curl:latest
         command: ['sh', '-c', 'until curl -s http://users-service:3000/healthz; do echo waiting for users service; sleep 2; done;']
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+          requests:
+            cpu: 1m
+            memory: 1Mi
       - name: wait-for-data-svc
         image: curlimages/curl:latest
         command: ['sh', '-c', 'until curl -s http://data-service:3000/healthz; do echo waiting for data service; sleep 2; done;']
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+          requests:
+            cpu: 1m
+            memory: 1Mi
       containers:
       - name: client
         image: CLIENT/IMAGE

@@ -15,6 +15,13 @@ spec:
       - name: wait-for-db
         image: postgres:alpine
         command: ['sh', '-c', 'until pg_isready -h data-svc-db -p 5432; do echo waiting for database; sleep 2; done;']
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+          requests:
+            cpu: 1m
+            memory: 1Mi
       containers:
       - name: data-service
         image: DATA-SVC/IMAGE
