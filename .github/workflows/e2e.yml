@@ -45,11 +45,14 @@ jobs:
         docker load --input ${{ runner.temp }}/images/users-svc-image.tar
         docker load --input ${{ runner.temp }}/images/data-svc-image.tar
 
-    - name: Start services
-      run: |
-        docker run -d --name users-svc --link users-db:users-db -e DB_URL=postgresql://postgres:postgres@users-db:5432/postgres -e JWT_KEY=jwtkey -e PORT=3000 users-svc-image
-        docker run -d --name data-svc --link data-db:data-db -e DB_URL=postgresql://postgres:postgres@data-db:5432/postgres -e JWT_KEY=jwtkey -e PORT=3000 data-svc-image
-        docker run -d --name client -p 4173:80 -e APP_USERS_SVC=http://users-svc:3000 -e APP_DATA_SVC=http://data-svc:3000 client-image
+    - name: Print dockerimges
+      run: docker images -a
+
+    # - name: Start services
+      # run: |
+        # docker run -d --name users-svc --link users-db:users-db -e DB_URL=postgresql://postgres:postgres@users-db:5432/postgres -e JWT_KEY=jwtkey -e PORT=3000 users-svc-image
+        # docker run -d --name data-svc --link data-db:data-db -e DB_URL=postgresql://postgres:postgres@data-db:5432/postgres -e JWT_KEY=jwtkey -e PORT=3000 data-svc-image
+        # docker run -d --name client -p 4173:80 -e APP_USERS_SVC=http://users-svc:3000 -e APP_DATA_SVC=http://data-svc:3000 client-image
 
     - name: Print workflow info
       run: |
