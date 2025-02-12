@@ -1,4 +1,5 @@
 name: e2e tests
+name: e2e tests with PostgreSQL
 on:
   workflow_call:
 
@@ -6,12 +7,53 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    services:
+      users-db:
+        image: postgres:alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+
+      data-db:
+        image: postgres:alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+
     steps:
     - uses: actions/checkout@v4
+
+    - name: Download client image
+      uses: actions/download-artifact@v4
+      with:
+        name: client-image
+        path: ${{ runner.temp }}/images
+
+    - name: Download users service image
+      uses: actions/download-artifact@v4
+      with:
+        name: users-svc-image
+        path: ${{ runner.temp }}/images
+
+    - name: Download data service image
+      uses: actions/download-artifact@v4
+      with:
+        name: data-svc-image
+        path: ${{ runner.temp }}/images
+
+    - name: Load Docker images
+      run: |
+        docker load --input ${{ runner.temp }}/images/client-image.tar
+        docker load --input ${{ runner.temp }}/images/users-svc-image.tar
+        docker load --input ${{ runner.temp }}/images/data-svc-image.tar
+
+    - name: Start services
+      run: |
+        docker run -d --name users-svc --link users-db:users-db -e DB_URL=postgresql://postgres:postgres@users-db:5432/postgres -e JWT_KEY=jwtkey -e PORT=3000 users-svc-image
+        docker run -d --name data-svc --link data-db:data-db -e DB_URL=postgresql://postgres:postgres@data-db:5432/postgres -e JWT_KEY=jwtkey -e PORT=3000 data-svc-image
+        docker run -d --name client -p 4173:80 -e APP_USERS_SVC=http://users-svc:3000 -e APP_DATA_SVC=http://data-svc:3000 client-image
+
     - name: Print workflow info
       run: |
         echo "skipping for now."
-
 
 ## playwright tests here later. I've now idea how to get all the services up and
 ## running seamlessly.

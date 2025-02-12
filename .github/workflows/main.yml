@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'client/**'
-      - 'data-service/**'
-      - 'users-service/**'
+    # paths:
+    #   - 'client/**'
+    #   - 'data-service/**'
+    #   - 'users-service/**'
 
 jobs:
   client:
