@@ -5,7 +5,7 @@ services:
     image: eeritvan/tracker-client:latest
     container_name: client
     ports:
-      - "4173:80"
+      - "5173:80"
     environment:
       - APP_USERS_SVC=http://users-service:3000
       - APP_DATA_SVC=http://data-service:3000
