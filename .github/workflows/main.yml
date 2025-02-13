@@ -76,7 +76,7 @@ jobs:
 
   deploy-client:
     needs: [paths-filter, e2e]
-    if: ${{ needs.paths-filter.outputs.client == 'true' }}
+    if: always() && ${{ needs.paths-filter.outputs.client == 'true' }}
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -103,7 +103,7 @@ jobs:
 
   deploy-users-service:
     needs: [paths-filter, e2e]
-    if: ${{ needs.paths-filter.outputs.users_service == 'true' }}
+    if: always() && ${{ needs.paths-filter.outputs.users_service == 'true' }}
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -130,7 +130,7 @@ jobs:
 
   deploy-data-service:
     needs: [paths-filter, e2e]
-    if: ${{ needs.paths-filter.outputs.data_service == 'true' }}
+    if: always() && ${{ needs.paths-filter.outputs.data_service == 'true' }}
     runs-on: ubuntu-22.04
     defaults:
       run:
