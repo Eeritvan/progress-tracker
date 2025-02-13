@@ -1,156 +1,162 @@
-name: CI/CD pipeline
+  name: CI/CD pipeline
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'client/**'
-      - 'data-service/**'
-      - 'users-service/**'
+  on:
+    push:
+      branches:
+        - main
+      paths:
+        - 'client/**'
+        - 'data-service/**'
+        - 'users-service/**'
 
-jobs:
-  paths-filter:
-    runs-on: ubuntu-latest
-    outputs:
-      client: ${{ steps.filter.outputs.client }}
-      users_service: ${{ steps.filter.outputs.users_service }}
-      data_service: ${{ steps.filter.outputs.data_service }}
-    steps:
+  jobs:
+    paths-filter:
+      runs-on: ubuntu-latest
+      outputs:
+        client: ${{ steps.filter.outputs.client }}
+        users_service: ${{ steps.filter.outputs.users_service }}
+        data_service: ${{ steps.filter.outputs.data_service }}
+      steps:
+        - uses: actions/checkout@v4
+        - name: Filter changed paths
+          id: filter
+          uses: dorny/paths-filter@v3
+          with:
+            filters: |
+              client:
+                - 'client/**'
+              users_service:
+                - 'users-service/**'
+              data_service:
+                - 'data-service/**'
+
+    client:
+      needs: [paths-filter]
+      if: ${{ needs.paths-filter.outputs.client == 'true' }}
+      uses: ./.github/workflows/client.yml
+      secrets:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    users-service:
+      needs: [paths-filter]
+      if: ${{ needs.paths-filter.outputs.users_service == 'true' }}
+      uses: ./.github/workflows/users-service.yml
+      secrets:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    data-service:
+      needs: [paths-filter]
+      if: ${{ needs.paths-filter.outputs.data_service == 'true' }}
+      uses: ./.github/workflows/data-service.yml
+      secrets:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    e2e:
+      needs: [paths-filter, client, users-service, data-service]
+      if: |
+        always() && (
+          (needs.paths-filter.outputs.client == 'true' ||
+          needs.paths-filter.outputs.users_service == 'true' ||
+          needs.paths-filter.outputs.data_service == 'true') &&
+          (needs.client.result == 'success' || needs.client.result == 'skipped') &&
+          (needs.users-service.result == 'success' || needs.users-service.result == 'skipped') &&
+          (needs.data-service.result == 'success' || needs.data-service.result == 'skipped')
+        )
+      uses: ./.github/workflows/e2e.yml
+      with:
+        client: ${{ needs.paths-filter.outputs.client == 'true' }}
+        users_service: ${{ needs.paths-filter.outputs.users_service == 'true' }}
+        data_service: ${{ needs.paths-filter.outputs.data_service == 'true' }}
+
+    deploy-client:
+      needs: [paths-filter, e2e]
+      if: |
+        needs.paths-filter.outputs.client == 'true' &&
+        needs.e2e.result == 'success'
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: client
+      steps:
       - uses: actions/checkout@v4
-      - name: Filter changed paths
-        id: filter
-        uses: dorny/paths-filter@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          filters: |
-            client:
-              - 'client/**'
-            users_service:
-              - 'users-service/**'
-            data_service:
-              - 'data-service/**'
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: client-image
+          path: ${{ runner.temp }}
+      - name: Load image
+        run: |
+          docker load --input ${{ runner.temp }}/client-image.tar
+      - name: Push Docker image
+        run: |
+          docker push eeritvan/tracker-client:${{ github.sha }}
+          docker push eeritvan/tracker-client:latest
 
-  client:
-    needs: [paths-filter]
-    if: ${{ needs.paths-filter.outputs.client == 'true' }}
-    uses: ./.github/workflows/client.yml
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    deploy-users-service:
+      needs: [paths-filter, e2e]
+      if: |
+        needs.paths-filter.outputs.client == 'true' &&
+        needs.e2e.result == 'success'
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: users-service
+      steps:
+      - uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: users-svc-image
+          path: ${{ runner.temp }}
+      - name: Load image
+        run: |
+          docker load --input ${{ runner.temp }}/users-svc-image.tar
+      - name: Push Docker image
+        run: |
+          docker push eeritvan/tracker-users-svc:${{ github.sha }}
+          docker push eeritvan/tracker-users-svc:latest
 
-  users-service:
-    needs: [paths-filter]
-    if: ${{ needs.paths-filter.outputs.users_service == 'true' }}
-    uses: ./.github/workflows/users-service.yml
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-  data-service:
-    needs: [paths-filter]
-    if: ${{ needs.paths-filter.outputs.data_service == 'true' }}
-    uses: ./.github/workflows/data-service.yml
-    secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-  e2e:
-    needs: [paths-filter, client, users-service, data-service]
-    if: |
-      always() && (
-        (needs.paths-filter.outputs.client == 'true' ||
-        needs.paths-filter.outputs.users_service == 'true' ||
-        needs.paths-filter.outputs.data_service == 'true') &&
-        (needs.client.result == 'success' || needs.client.result == 'skipped') &&
-        (needs.users-service.result == 'success' || needs.users-service.result == 'skipped') &&
-        (needs.data-service.result == 'success' || needs.data-service.result == 'skipped')
-      )
-    uses: ./.github/workflows/e2e.yml
-    with:
-      client: ${{ needs.paths-filter.outputs.client == 'true' }}
-      users_service: ${{ needs.paths-filter.outputs.users_service == 'true' }}
-      data_service: ${{ needs.paths-filter.outputs.data_service == 'true' }}
-
-  deploy-client:
-    needs: [paths-filter, e2e]
-    if: always() && ${{ needs.paths-filter.outputs.client == 'true' }}
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: client
-    steps:
-    - uses: actions/checkout@v4
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Download image artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: client-image
-        path: ${{ runner.temp }}
-    - name: Load image
-      run: |
-        docker load --input ${{ runner.temp }}/client-image.tar
-    - name: Push Docker image
-      run: |
-        docker push eeritvan/tracker-client:${{ github.sha }}
-        docker push eeritvan/tracker-client:latest
-
-  deploy-users-service:
-    needs: [paths-filter, e2e]
-    if: always() && ${{ needs.paths-filter.outputs.users_service == 'true' }}
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: users-service
-    steps:
-    - uses: actions/checkout@v4
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Download image artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: users-svc-image
-        path: ${{ runner.temp }}
-    - name: Load image
-      run: |
-        docker load --input ${{ runner.temp }}/users-svc-image.tar
-    - name: Push Docker image
-      run: |
-        docker push eeritvan/tracker-users-svc:${{ github.sha }}
-        docker push eeritvan/tracker-users-svc:latest
-
-  deploy-data-service:
-    needs: [paths-filter, e2e]
-    if: always() && ${{ needs.paths-filter.outputs.data_service == 'true' }}
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: data-service
-    steps:
-    - uses: actions/checkout@v4
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Download image artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: data-svc-image
-        path: ${{ runner.temp }}
-    - name: Load image
-      run: |
-        docker load --input ${{ runner.temp }}/data-svc-image.tar
-    - name: Push Docker image
-      run: |
-        docker push eeritvan/tracker-data-svc:${{ github.sha }}
-        docker push eeritvan/tracker-data-svc:latest
+    deploy-data-service:
+      needs: [paths-filter, e2e]
+      if: |
+        needs.paths-filter.outputs.client == 'true' &&
+        needs.e2e.result == 'success'
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: data-service
+      steps:
+      - uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: data-svc-image
+          path: ${{ runner.temp }}
+      - name: Load image
+        run: |
+          docker load --input ${{ runner.temp }}/data-svc-image.tar
+      - name: Push Docker image
+        run: |
+          docker push eeritvan/tracker-data-svc:${{ github.sha }}
+          docker push eeritvan/tracker-data-svc:latest
