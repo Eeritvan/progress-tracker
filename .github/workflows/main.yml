@@ -77,8 +77,10 @@
     deploy-client:
       needs: [paths-filter, e2e]
       if: |
-        needs.paths-filter.outputs.client == 'true' &&
-        needs.e2e.result == 'success'
+        always() && (
+          needs.paths-filter.outputs.client == 'true' &&
+          needs.e2e.result == 'success'
+        )
       runs-on: ubuntu-latest
       defaults:
         run:
@@ -106,8 +108,10 @@
     deploy-users-service:
       needs: [paths-filter, e2e]
       if: |
-        needs.paths-filter.outputs.client == 'true' &&
-        needs.e2e.result == 'success'
+        always() && (
+          needs.paths-filter.outputs.client == 'true' &&
+          needs.e2e.result == 'success'
+        )
       runs-on: ubuntu-latest
       defaults:
         run:
@@ -135,8 +139,10 @@
     deploy-data-service:
       needs: [paths-filter, e2e]
       if: |
-        needs.paths-filter.outputs.client == 'true' &&
-        needs.e2e.result == 'success'
+        always() && (
+          needs.paths-filter.outputs.client == 'true' &&
+          needs.e2e.result == 'success'
+        )
       runs-on: ubuntu-latest
       defaults:
         run:
