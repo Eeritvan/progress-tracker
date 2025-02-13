@@ -7,17 +7,6 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    services:
-      users-db:
-        image: postgres:alpine
-        env:
-          POSTGRES_PASSWORD: postgres
-
-      data-db:
-        image: postgres:alpine
-        env:
-          POSTGRES_PASSWORD: postgres
-
     steps:
     - uses: actions/checkout@v4
 
@@ -48,15 +37,41 @@ jobs:
     - name: Print dockerimges
       run: docker images -a
 
-    - name: Start services
-      run: |
-        docker run -d --name users-svc --link users-db:users-db -e DB_URL=postgresql://postgres:postgres@users-db:5432/postgres -e JWT_KEY=jwtkey -e PORT=3000 eeritvan/users-svc-image:${{ github.sha }}
-        docker run -d --name data-svc --link data-db:data-db -e DB_URL=postgresql://postgres:postgres@data-db:5432/postgres -e JWT_KEY=jwtkey -e PORT=3000 eeritvan/data-svc-image:${{ github.sha }}
-        docker run -d --name client -p 4173:80 -e APP_USERS_SVC=http://users-svc:3000 -e APP_DATA_SVC=http://data-svc:3000 eeritvan/client-image:${{ github.sha }}
+    - name: Start docker compose
+      env:
+        POSTGRES_PASSWORD: postgres
+        JWT_KEY: secretkey
+      run: docker compose up -d
 
-    - name: Print workflow info
-      run: |
-        echo "skipping for now."
+    - name: wait for services
+      run: sleep 20
 
-## playwright tests here later. I've now idea how to get all the services up and
-## running seamlessly.
+    - name: Wait for client
+      run: |
+        until curl -sSf http://localhost:4173; do
+          netstat -t
+          docker ps -a
+          sleep 1
+        done
+
+    - uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: latest
+
+    - name: Install Deps
+      run: bun install --frozen-lockfiles
+      working-directory: client
+
+    - name: Install Playwright Browsers
+      run: bunx playwright install --with-deps chromium
+
+    - name: Run Playwright tests
+      run: bunx playwright test
+      working-directory: client
+
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
