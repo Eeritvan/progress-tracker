@@ -109,7 +109,7 @@
       needs: [paths-filter, e2e]
       if: |
         always() && (
-          needs.paths-filter.outputs.client == 'true' &&
+          needs.paths-filter.outputs.users_service == 'true' &&
           needs.e2e.result == 'success'
         )
       runs-on: ubuntu-latest
@@ -140,7 +140,7 @@
       needs: [paths-filter, e2e]
       if: |
         always() && (
-          needs.paths-filter.outputs.client == 'true' &&
+          needs.paths-filter.outputs.data_service == 'true' &&
           needs.e2e.result == 'success'
         )
       runs-on: ubuntu-latest
