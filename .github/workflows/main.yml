@@ -4,19 +4,44 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - 'client/**'
-    #   - 'data-service/**'
-    #   - 'users-service/**'
+    paths:
+      - 'client/**'
+      - 'data-service/**'
+      - 'users-service/**'
 
 jobs:
+  paths-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      client: ${{ steps.filter.outputs.client }}
+      users_service: ${{ steps.filter.outputs.users_service }}
+      data_service: ${{ steps.filter.outputs.data_service }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Filter changed paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            client:
+              - 'client/**'
+            users_service:
+              - 'users-service/**'
+            data_service:
+              - 'data-service/**'
+
   client:
+    needs: [paths-filter]
+    if: ${{ needs.paths-filter.outputs.client == 'true' }}
     uses: ./.github/workflows/client.yml
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   users-service:
+    needs: [paths-filter]
+    if: ${{ needs.paths-filter.outputs.users_service == 'true' }}
     uses: ./.github/workflows/users-service.yml
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -24,6 +49,8 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   data-service:
+    needs: [paths-filter]
+    if: ${{ needs.paths-filter.outputs.data_service == 'true' }}
     uses: ./.github/workflows/data-service.yml
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -31,11 +58,25 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   e2e:
-    needs: [client, users-service, data-service]
+    needs: [paths-filter, client, users-service, data-service]
+    if: |
+      always() && (
+        (needs.paths-filter.outputs.client == 'true' ||
+        needs.paths-filter.outputs.users_service == 'true' ||
+        needs.paths-filter.outputs.data_service == 'true') &&
+        (needs.client.result == 'success' || needs.client.result == 'skipped') &&
+        (needs.users-service.result == 'success' || needs.users-service.result == 'skipped') &&
+        (needs.data-service.result == 'success' || needs.data-service.result == 'skipped')
+      )
     uses: ./.github/workflows/e2e.yml
+    with:
+      client: ${{ needs.paths-filter.outputs.client == 'true' }}
+      users_service: ${{ needs.paths-filter.outputs.users_service == 'true' }}
+      data_service: ${{ needs.paths-filter.outputs.data_service == 'true' }}
 
   deploy-client:
-    needs: [e2e]
+    needs: [paths-filter, e2e]
+    if: ${{ needs.paths-filter.outputs.client == 'true' }}
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -61,7 +102,8 @@ jobs:
         docker push eeritvan/tracker-client:latest
 
   deploy-users-service:
-    needs: [e2e]
+    needs: [paths-filter, e2e]
+    if: ${{ needs.paths-filter.outputs.users_service == 'true' }}
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -87,7 +129,8 @@ jobs:
         docker push eeritvan/tracker-users-svc:latest
 
   deploy-data-service:
-    needs: [e2e]
+    needs: [paths-filter, e2e]
+    if: ${{ needs.paths-filter.outputs.data_service == 'true' }}
     runs-on: ubuntu-22.04
     defaults:
       run:

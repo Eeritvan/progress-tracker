@@ -2,27 +2,38 @@ name: e2e tests
 
 on:
   workflow_call:
-
+    inputs:
+      client:
+        required: true
+        type: boolean
+      users_service:
+        required: true
+        type: boolean
+      data_service:
+        required: true
+        type: boolean
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-
     - name: Download client image
+      if: inputs.client
       uses: actions/download-artifact@v4
       with:
         name: client-image
         path: ${{ runner.temp }}/images
 
     - name: Download users service image
+      if: inputs.users_service
       uses: actions/download-artifact@v4
       with:
         name: users-svc-image
         path: ${{ runner.temp }}/images
 
     - name: Download data service image
+      if: inputs.data_service
       uses: actions/download-artifact@v4
       with:
         name: data-svc-image
@@ -30,9 +41,15 @@ jobs:
 
     - name: Load Docker images
       run: |
-        docker load --input ${{ runner.temp }}/images/client-image.tar
-        docker load --input ${{ runner.temp }}/images/users-svc-image.tar
-        docker load --input ${{ runner.temp }}/images/data-svc-image.tar
+        if [[ "${{ inputs.client }}" == "true" ]]; then
+          docker load --input ${{ runner.temp }}/images/client-image.tar
+        fi
+        if [[ "${{ inputs.users_service }}" == "true" ]]; then
+          docker load --input ${{ runner.temp }}/images/users-svc-image.tar
+        fi
+        if [[ "${{ inputs.data_service }}" == "true" ]]; then
+          docker load --input ${{ runner.temp }}/images/data-svc-image.tar
+        fi
 
     - name: Start docker compose
       env:
