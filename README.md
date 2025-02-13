@@ -85,7 +85,7 @@ ggs
     POSTGRES_PASSWORD=<YOUR_PASSWORD>
     ```
 4. Run `docker compose up`
-5. The app should be available at the URL: `localhost:4173`
+5. The app should be available at the URL: `localhost:5173`
 
 ### Kubernetes
 **Prerequisites**
