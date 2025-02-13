@@ -34,17 +34,11 @@ jobs:
         docker load --input ${{ runner.temp }}/images/users-svc-image.tar
         docker load --input ${{ runner.temp }}/images/data-svc-image.tar
 
-    - name: Print dockerimges
-      run: docker images -a
-
     - name: Start docker compose
       env:
         POSTGRES_PASSWORD: postgres
         JWT_KEY: secretkey
       run: docker compose up -d
-
-    - name: wait for services
-      run: sleep 20
 
     - name: Wait for client
       run: |
@@ -68,10 +62,3 @@ jobs:
     - name: Run Playwright tests
       run: bunx playwright test
       working-directory: client
-
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
