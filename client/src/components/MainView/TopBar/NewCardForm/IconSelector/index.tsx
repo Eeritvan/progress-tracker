@@ -45,6 +45,7 @@ const IconSelector = ({ register, error }: IconSelectorProps) => {
                 type='radio'
                 id={icon}
                 value={icon}
+                data-testid={'icon'}
                 {...register('icon')}
                 className='appearance-none bg-iconbg aspect-square rounded-lg
                   m-1 h-7 checked:bg-neutral-50'

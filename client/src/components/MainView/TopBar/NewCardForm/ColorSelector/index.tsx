@@ -16,6 +16,7 @@ const ColorSelector = ({ register, error }: ColorSelectorProps) => {
               type='radio'
               id={color}
               value={color}
+              data-testid={'color'}
               className='appearance-none aspect-square rounded-lg m-1 h-7
                 relative checked:before:absolute checked:before:w-3
                 checked:before:h-3 checked:before:bg-black
