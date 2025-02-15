@@ -1,5 +1,3 @@
-[![client pipeline](https://github.com/Eeritvan/tracker/actions/workflows/client.yml/badge.svg)](https://github.com/Eeritvan/tracker/actions/workflows/client.yml)
-
 ## Prerequisites
 - Node.js 18+
 - [Environment variables](#env-variables) set in .env file
