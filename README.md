@@ -1,3 +1,5 @@
+[![CI/CD pipeline](https://github.com/Eeritvan/progress-tracker/actions/workflows/main.yml/badge.svg)](https://github.com/Eeritvan/progress-tracker/actions/workflows/main.yml)
+
 ## Table of Content
 - [The App](#the-app)
 - [Tech Used](#tech-used)
