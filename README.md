@@ -19,12 +19,6 @@ A simple progress tracking app with the following features:
 - Customization
   - Multiple theme support
 
-## Testing app in Google Cloud
-> [!NOTE]
-> The app doesn't use https so please don't use real information if you decide to register or login for your safety.
-
-Available at: [http://34.8.77.235/](http://34.8.77.235/)
-
 ## Tech Used
 - The frontend is made with Vite and React
 - The backend consists of two Go microservices:
@@ -63,7 +57,6 @@ the project is a monorepo containing the following services:
 - `users-service/` - Go microservice for user authentication
 
 ## Installation
-ggs
 ### Local
 **Prerequisites**
 - Node.js 18+ for the frontend
