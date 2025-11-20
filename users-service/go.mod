@@ -1,6 +1,6 @@
 module users-service
 
-go 1.23.4
+go 1.24.0
 
 require (
 	github.com/99designs/gqlgen v0.17.63
@@ -12,7 +12,7 @@ require (
 	github.com/pquerna/otp v1.4.0
 	github.com/rs/cors v1.11.1
 	github.com/vektah/gqlparser/v2 v2.5.21
-	golang.org/x/crypto v0.32.0
+	golang.org/x/crypto v0.45.0
 )
 
 require (
@@ -30,9 +30,9 @@ require (
 	github.com/sosodev/duration v1.3.1 // indirect
 	github.com/urfave/cli/v2 v2.27.5 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
-	golang.org/x/mod v0.22.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
-	golang.org/x/tools v0.29.0 // indirect
+	golang.org/x/mod v0.29.0 // indirect
+	golang.org/x/sync v0.18.0 // indirect
+	golang.org/x/text v0.31.0 // indirect
+	golang.org/x/tools v0.38.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
