@@ -2,6 +2,18 @@ import { test, expect, Locator } from '@playwright/test'
 
 const APP_URL = 'http://localhost:5173'
 const LOGIN_URL = 'http://localhost:5173/login'
+const REGISTER_URL = 'http://localhost:5173/register'
+
+test.beforeAll(async ({ browser }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto(REGISTER_URL)
+  await page.getByPlaceholder('username').fill('testAccount2')
+  await page.getByPlaceholder('password', { exact: true }).fill('testPassword')
+  await page.getByPlaceholder('confirm password').fill('testPassword')
+  await page.getByRole('button', { name: 'Continue' }).click()
+  await expect(page).toHaveURL(APP_URL)
+});
 
 test.describe('Main Application:', () => {
   interface MainPageInputs {
@@ -15,7 +27,8 @@ test.describe('Main Application:', () => {
   }
 
   let inputs: MainPageInputs
-  
+
+
   test.beforeEach(async ({ page }) => {
     inputs = {
       settingsButton: page.locator('button svg.lucide-settings'),
@@ -28,8 +41,8 @@ test.describe('Main Application:', () => {
     }
 
     await page.goto(LOGIN_URL)
-    
-    await page.getByPlaceholder('username').fill('testAccount')
+
+    await page.getByPlaceholder('username').fill('testAccount2')
     await page.getByPlaceholder('password').fill('testPassword')
     await page.getByRole('button', { name: 'Continue' }).click()
 
@@ -41,7 +54,7 @@ test.describe('Main Application:', () => {
 
     await inputs.settingsButton.click()
   })
-  
+
   test.describe('Creating new card: ', () => {
     test('shows up', async ({ page }) => {
       await expect(page).toHaveURL(APP_URL)
@@ -87,7 +100,7 @@ test.describe('Main Application:', () => {
       await page.keyboard.press('Escape')
 
       await expect(inputs.cardTitle).not.toBeVisible()
-    }) 
+    })
 
     test.describe('shows error with: ', () => {
       test('too short title ', async ({ page }) => {
@@ -104,7 +117,7 @@ test.describe('Main Application:', () => {
 
       test('duplicate title ', async ({ page  }) => {
         await inputs.addNewButton.click()
-      
+
         await inputs.cardTitle.fill('Test task')
         await inputs.colors.nth(2).click()
         await inputs.icons.nth(2).click({ force: true })
