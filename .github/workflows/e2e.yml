@@ -17,65 +17,65 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Download client image
-      if: inputs.client
-      uses: actions/download-artifact@v4
-      with:
-        name: client-image
-        path: ${{ runner.temp }}/images
+      - uses: actions/checkout@v4
+      - name: Download client image
+        if: inputs.client
+        uses: actions/download-artifact@v4
+        with:
+          name: client-image
+          path: ${{ runner.temp }}/images
 
-    - name: Download users service image
-      if: inputs.users_service
-      uses: actions/download-artifact@v4
-      with:
-        name: users-svc-image
-        path: ${{ runner.temp }}/images
+      - name: Download users service image
+        if: inputs.users_service
+        uses: actions/download-artifact@v4
+        with:
+          name: users-svc-image
+          path: ${{ runner.temp }}/images
 
-    - name: Download data service image
-      if: inputs.data_service
-      uses: actions/download-artifact@v4
-      with:
-        name: data-svc-image
-        path: ${{ runner.temp }}/images
+      - name: Download data service image
+        if: inputs.data_service
+        uses: actions/download-artifact@v4
+        with:
+          name: data-svc-image
+          path: ${{ runner.temp }}/images
 
-    - name: Load Docker images
-      run: |
-        if [[ "${{ inputs.client }}" == "true" ]]; then
-          docker load --input ${{ runner.temp }}/images/client-image.tar
-        fi
-        if [[ "${{ inputs.users_service }}" == "true" ]]; then
-          docker load --input ${{ runner.temp }}/images/users-svc-image.tar
-        fi
-        if [[ "${{ inputs.data_service }}" == "true" ]]; then
-          docker load --input ${{ runner.temp }}/images/data-svc-image.tar
-        fi
+      - name: Load Docker images
+        run: |
+          if [[ "${{ inputs.client }}" == "true" ]]; then
+            docker load --input ${{ runner.temp }}/images/client-image.tar
+          fi
+          if [[ "${{ inputs.users_service }}" == "true" ]]; then
+            docker load --input ${{ runner.temp }}/images/users-svc-image.tar
+          fi
+          if [[ "${{ inputs.data_service }}" == "true" ]]; then
+            docker load --input ${{ runner.temp }}/images/data-svc-image.tar
+          fi
 
-    - name: Start docker compose
-      env:
-        POSTGRES_PASSWORD: postgres
-        JWT_KEY: secretkey
-      run: docker compose up -d
+      - name: Start docker compose
+        env:
+          POSTGRES_PASSWORD: postgres
+          JWT_KEY: secretkey
+        run: docker compose up -d
 
-    - name: Wait for client
-      run: |
-        until curl -sSf http://localhost:5173; do
-          netstat -t
-          docker ps -a
-          sleep 1
-        done
+      - name: Wait for client
+        run: |
+          until curl -sSf http://localhost:5173; do
+            netstat -t
+            docker ps -a
+            sleep 1
+          done
 
-    - uses: oven-sh/setup-bun@v2
-      with:
-        bun-version: latest
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
-    - name: Install Deps
-      run: bun install --frozen-lockfiles
-      working-directory: client
+      - name: Install Deps
+        run: bun install --frozen-lockfiles
+        working-directory: client
 
-    - name: Install Playwright Browsers
-      run: bunx playwright install --with-deps chromium
+      - name: Install Playwright Browsers
+        run: bunx playwright install --with-deps chromium
 
-    - name: Run Playwright tests
-      run: bunx playwright test
-      working-directory: client
+      - name: Run Playwright tests
+        run: bunx playwright test
+        working-directory: client
