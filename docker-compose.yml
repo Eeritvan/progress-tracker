@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   client:
-    image: eeritvan/tracker-client:latest
+    build: ./client
     container_name: client
     ports:
       - "5173:80"
@@ -14,7 +14,7 @@ services:
       - APP_DATA_SVC=http://data-service:3000
 
   users-service:
-    image: eeritvan/tracker-users-svc:latest
+    build: ./users-service
     container_name: users-svc
     environment:
       - DB_URL=postgresql://postgres:${POSTGRES_PASSWORD}@users-db:5432/postgres
@@ -25,7 +25,7 @@ services:
     restart: on-failure
 
   data-service:
-    image: eeritvan/tracker-data-svc:latest
+    build: ./data-service
     container_name: data-svc
     environment:
       - DB_URL=postgresql://postgres:${POSTGRES_PASSWORD}@data-db:5432/postgres
