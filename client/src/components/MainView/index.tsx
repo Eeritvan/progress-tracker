@@ -3,6 +3,7 @@ import CardList from './CardList'
 import TopBar from './TopBar'
 import { getCardsQuery } from '@/graphql/queries'
 import useCardListSlice, { Card } from '@/store/cardListStore'
+import useSkipSlice from '@/store/skippedAuthStore'
 
 interface RawCardData {
   id: string;
@@ -15,9 +16,12 @@ interface RawCardData {
 
 const MainView = () => {
   const setCards = useCardListSlice((state) => state.setCardsOrder)
+  const skipped = useSkipSlice((state) => state.skipped)
+
   useQuery({
     queryKey: ['cards'],
     refetchOnWindowFocus: false,
+    enabled: !skipped,
     queryFn: async () => {
       const result = await getCardsQuery.send()
       const data = result.data?.getCards

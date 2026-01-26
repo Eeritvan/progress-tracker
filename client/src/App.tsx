@@ -3,11 +3,13 @@ import { useQuery } from '@tanstack/react-query'
 import { Redirect, Route, Switch } from 'wouter'
 import Authentication from './components/Authentication'
 import MainView from './components/MainView'
+import useSkipSlice from './store/skippedAuthStore'
 
 const App = () => {
   const { setItem: setTheme, getItem: getTheme } = useLocalStorage('theme')
   const { getItem: getUser } = useLocalStorage('user-info')
   const selectedTheme = getTheme()
+  const skipped = useSkipSlice((state) => state.skipped)
 
   useQuery({
     queryKey: ['theme', selectedTheme],
@@ -24,6 +26,7 @@ const App = () => {
 
   const { data: token } = useQuery({
     queryKey: ['token'],
+    enabled: !skipped,
     refetchOnWindowFocus: false,
     queryFn: () => getUser()
   })
@@ -34,13 +37,13 @@ const App = () => {
     >
       <Switch>
         <Route path='/login'>
-          {token ? <Redirect to='/' /> : <Authentication />}
+          {(token || skipped) ? <Redirect to='/' /> : <Authentication />}
         </Route>
         <Route path='/register'>
-          {token ? <Redirect to='/' /> : <Authentication />}
+          {(token || skipped) ? <Redirect to='/' /> : <Authentication />}
         </Route>
         <Route>
-          {!token ? <Redirect to='/login' /> : <MainView />}
+          {!(token || skipped) ? <Redirect to='/login' /> : <MainView />}
         </Route>
       </Switch>
     </div>

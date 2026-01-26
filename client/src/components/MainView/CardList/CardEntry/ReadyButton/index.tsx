@@ -3,17 +3,21 @@ import useCardListSlice from '@/store/cardListStore'
 import { COLORS } from '@/utils/constants'
 import { completeDayMutation } from '@/graphql/mutations'
 import { useMutation } from '@tanstack/react-query'
+import useSkipSlice from '@/store/skippedAuthStore'
 
 const ReadyButton = ({ id, completed, color }:
   { id: number, completed: boolean, color: (typeof COLORS)[number] }
 ) => {
   const toggleDay = useCardListSlice((state) => state.toggleDay)
+  const skipped = useSkipSlice((state) => state.skipped)
 
   const completeDayMutate = useMutation({
     mutationFn: async (id: number) => {
-      const result = await completeDayMutation.send({ id })
-      if (result.errors) throw result.errors[0].message
-      return result.data?.completeDay
+      if (!skipped) {
+        const result = await completeDayMutation.send({ id })
+        if (result.errors) throw result.errors[0].message
+        return result.data?.completeDay
+      }
     },
     onError: (e) => { throw e },
     onSuccess: () => toggleDay(id)

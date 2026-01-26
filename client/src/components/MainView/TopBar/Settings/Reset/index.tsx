@@ -1,9 +1,11 @@
 import { resetAllCardsMutation } from '@/graphql/mutations'
 import useCardListSlice from '@/store/cardListStore'
+import useSkipSlice from '@/store/skippedAuthStore'
 import { useMutation } from '@tanstack/react-query'
 
 const Reset = () => {
   const resetCards = useCardListSlice((state) => state.resetCards)
+  const skipped = useSkipSlice((state) => state.skipped)
 
   const resetAllCardsMutate = useMutation({
     mutationFn: async () => {
@@ -17,7 +19,11 @@ const Reset = () => {
 
   const handleClick = async () => {
     const answer = confirm('Are you sure?')
-    if (answer) await resetAllCardsMutate.mutateAsync()
+    if (answer && skipped) {
+      resetCards()
+    } else if (answer) {
+      await resetAllCardsMutate.mutateAsync()
+    }
   }
 
   return (

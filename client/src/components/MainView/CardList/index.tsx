@@ -21,10 +21,12 @@ import {
 } from '@dnd-kit/sortable'
 import { useMutation } from '@tanstack/react-query'
 import { reorderCardsMutation } from '@/graphql/mutations'
+import useSkipSlice from '@/store/skippedAuthStore'
 
 const CardList = () => {
   const cards = useCardListSlice((state) => state.cards)
   const setCardsOrder = useCardListSlice((state) => state.setCardsOrder)
+  const skipped = useSkipSlice((state) => state.skipped)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -38,9 +40,11 @@ const CardList = () => {
 
   const reorderMutation = useMutation({
     mutationFn: async (cardIds: number[]) => {
-      const result = await reorderCardsMutation.send({ input: cardIds })
-      if (result.errors) throw result.errors[0].message
-      return result.data?.reorderCards
+      if (!skipped) {
+        const result = await reorderCardsMutation.send({ input: cardIds })
+        if (result.errors) throw result.errors[0].message
+        return result.data?.reorderCards
+      }
     }
   })
 

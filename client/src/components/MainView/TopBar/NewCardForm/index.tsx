@@ -17,6 +17,7 @@ import IconSelector from './IconSelector'
 import { COLORS, ICONS } from '../../../../utils/constants'
 import { createCardMutation } from '@/graphql/mutations'
 import { useMutation } from '@tanstack/react-query'
+import useSkipSlice from '@/store/skippedAuthStore'
 
 const newCardSchema = object({
   title: pipe(
@@ -38,6 +39,8 @@ type CardData = InferInput<typeof newCardSchema>
 
 const NewCardform = () => {
   const addNewCard = useCardsSlice((state) => state.addNewCard)
+  const skipped = useSkipSlice((state) => state.skipped)
+
   const {
     register,
     handleSubmit,
@@ -75,7 +78,19 @@ const NewCardform = () => {
 
   const onSubmit: SubmitHandler<CardData> = async (data) => {
     try {
-      await addCardMutate.mutateAsync(data)
+      if (!skipped) {
+        await addCardMutate.mutateAsync(data)
+      } else {
+        const newCard: Card = {
+          id: Math.floor(Math.random() * 100000),
+          title: data.title,
+          desc: data.desc,
+          completedDays: new Set<string>([]),
+          color: data.color,
+          icon: data.icon
+        }
+        addNewCard(newCard)
+      }
     } catch (error) {
       setError('root', { message: error as string })
     }
