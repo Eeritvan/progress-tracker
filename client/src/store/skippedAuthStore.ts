@@ -9,7 +9,7 @@ interface CardListState {
 const useSkipSlice = create<CardListState>((set) => ({
   skipped: false,
   setSkip: () => set({ skipped: true }),
-  resetSkip: () => set({ skipped: false }),
-}));
+  resetSkip: () => set({ skipped: false })
+}))
 
 export default useSkipSlice
