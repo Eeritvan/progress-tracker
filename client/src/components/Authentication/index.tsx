@@ -23,7 +23,7 @@ const Authentication = () => {
         className="cursor-pointer"
         onClick={() => setSkip()}
       >
-        Try the app without logging in!
+        Try without logging in!
       </button>
     </>
   )
