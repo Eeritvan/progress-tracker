@@ -8,12 +8,12 @@ package sqlc
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 const login = `-- name: Login :one
 SELECT id, name, password_hash
-FROM Users
+FROM users
 WHERE name = $1
 `
 
@@ -25,7 +25,7 @@ func (q *Queries) Login(ctx context.Context, name string) (User, error) {
 }
 
 const signup = `-- name: Signup :one
-INSERT INTO Users (name, password_hash)
+INSERT INTO users (name, password_hash)
 VALUES ($1, $2)
 RETURNING id, name
 `
@@ -36,7 +36,7 @@ type SignupParams struct {
 }
 
 type SignupRow struct {
-	ID   pgtype.UUID
+	ID   uuid.UUID
 	Name string
 }
 

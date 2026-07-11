@@ -5,11 +5,18 @@
 package sqlc
 
 import (
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
+type Tracker struct {
+	ID          uuid.UUID
+	OwnerID     uuid.UUID
+	Title       string
+	Description *string
+}
+
 type User struct {
-	ID           pgtype.UUID
+	ID           uuid.UUID
 	Name         string
 	PasswordHash string
 }

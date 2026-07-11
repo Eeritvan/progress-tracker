@@ -1,9 +1,9 @@
 -- name: Login :one
 SELECT id, name, password_hash
-FROM Users
+FROM users
 WHERE name = $1;
 
 -- name: Signup :one
-INSERT INTO Users (name, password_hash)
+INSERT INTO users (name, password_hash)
 VALUES ($1, $2)
 RETURNING id, name;

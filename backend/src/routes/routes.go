@@ -9,4 +9,5 @@ func RegisterRoutes(e *echo.Echo, s *api.Server) {
 	g := e.Group("/api")
 
 	authRoutes(g, s)
+	trackerRoutes(g, s)
 }
