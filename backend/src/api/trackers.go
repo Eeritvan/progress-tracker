@@ -10,6 +10,16 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
+// (GET /trackers)
+func (s *Server) GetTracker(c *echo.Context) error {
+	userId := c.Get("userId").(uuid.UUID)
+
+	ctx := c.Request().Context()
+	queryResp, _ := s.queries.GetTracker(ctx, userId)
+
+	return c.JSON(http.StatusOK, queryResp)
+}
+
 // (POST /trackers/new)
 func (s *Server) AddTracker(c *echo.Context) error {
 	userId := c.Get("userId").(uuid.UUID)

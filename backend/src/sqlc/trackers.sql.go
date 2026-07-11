@@ -84,3 +84,34 @@ func (q *Queries) EditTracker(ctx context.Context, arg EditTrackerParams) (Track
 	)
 	return i, err
 }
+
+const getTracker = `-- name: GetTracker :many
+SELECT id, owner_id, title, description
+FROM trackers
+WHERE owner_id = $1
+`
+
+func (q *Queries) GetTracker(ctx context.Context, ownerID uuid.UUID) ([]Tracker, error) {
+	rows, err := q.db.Query(ctx, getTracker, ownerID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Tracker
+	for rows.Next() {
+		var i Tracker
+		if err := rows.Scan(
+			&i.ID,
+			&i.OwnerID,
+			&i.Title,
+			&i.Description,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

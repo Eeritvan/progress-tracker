@@ -1,3 +1,8 @@
+-- name: GetTracker :many
+SELECT *
+FROM trackers
+WHERE owner_id = $1;
+
 -- name: AddTracker :one
 INSERT INTO trackers (owner_id, title, description)
 VALUES ($1, $2, sqlc.narg('description'))
