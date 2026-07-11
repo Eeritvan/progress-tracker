@@ -4,7 +4,7 @@ FROM Users
 WHERE name = $1;
 
 
--- name: Signup :many
+-- name: Signup :one
 INSERT INTO Users (name, password_hash)
 VALUES ($1, $2)
 RETURNING id, name;

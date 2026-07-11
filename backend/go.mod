@@ -4,7 +4,7 @@ go 1.26.4
 
 require (
 	github.com/go-playground/validator/v10 v10.30.3
-	github.com/google/uuid v1.6.0
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/jackc/pgx/v5 v5.10.0
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v5 v5.2.1

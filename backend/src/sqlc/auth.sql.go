@@ -24,7 +24,7 @@ func (q *Queries) Login(ctx context.Context, name string) (User, error) {
 	return i, err
 }
 
-const signup = `-- name: Signup :many
+const signup = `-- name: Signup :one
 INSERT INTO Users (name, password_hash)
 VALUES ($1, $2)
 RETURNING id, name
@@ -40,22 +40,9 @@ type SignupRow struct {
 	Name string
 }
 
-func (q *Queries) Signup(ctx context.Context, arg SignupParams) ([]SignupRow, error) {
-	rows, err := q.db.Query(ctx, signup, arg.Name, arg.PasswordHash)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []SignupRow
-	for rows.Next() {
-		var i SignupRow
-		if err := rows.Scan(&i.ID, &i.Name); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+func (q *Queries) Signup(ctx context.Context, arg SignupParams) (SignupRow, error) {
+	row := q.db.QueryRow(ctx, signup, arg.Name, arg.PasswordHash)
+	var i SignupRow
+	err := row.Scan(&i.ID, &i.Name)
+	return i, err
 }
