@@ -9,6 +9,9 @@ import (
 	"github.com/eeritvan/progress-tracker/src/api"
 	"github.com/eeritvan/progress-tracker/src/routes"
 	"github.com/eeritvan/progress-tracker/src/sqlc"
+	"github.com/eeritvan/progress-tracker/src/utils"
+
+	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v5"
@@ -30,9 +33,9 @@ func main() {
 
 	e := echo.New()
 
-	// e.Validator = &utils.CustomValidator{
-	// 	Validator: validator.New(validator.WithRequiredStructEnabled()),
-	// }
+	e.Validator = &utils.CustomValidator{
+		Validator: validator.New(validator.WithRequiredStructEnabled()),
+	}
 
 	e.Use(middleware.BodyLimit(524_288)) // 500kb
 

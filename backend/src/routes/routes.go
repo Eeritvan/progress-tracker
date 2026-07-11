@@ -8,5 +8,5 @@ import (
 func RegisterRoutes(e *echo.Echo, s *api.Server) {
 	g := e.Group("/api")
 
-	userRoutes(g, s)
+	authRoutes(g, s)
 }
