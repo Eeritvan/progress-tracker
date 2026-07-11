@@ -34,3 +34,36 @@ func (q *Queries) AddTracker(ctx context.Context, arg AddTrackerParams) (Tracker
 	)
 	return i, err
 }
+
+const editTracker = `-- name: EditTracker :one
+UPDATE trackers
+SET
+    title = COALESCE($3, title),
+    description = COALESCE($4, description)
+WHERE id = $1 AND owner_id = $2
+RETURNING id, owner_id, title, description
+`
+
+type EditTrackerParams struct {
+	ID          uuid.UUID
+	OwnerID     uuid.UUID
+	Title       *string
+	Description *string
+}
+
+func (q *Queries) EditTracker(ctx context.Context, arg EditTrackerParams) (Tracker, error) {
+	row := q.db.QueryRow(ctx, editTracker,
+		arg.ID,
+		arg.OwnerID,
+		arg.Title,
+		arg.Description,
+	)
+	var i Tracker
+	err := row.Scan(
+		&i.ID,
+		&i.OwnerID,
+		&i.Title,
+		&i.Description,
+	)
+	return i, err
+}

@@ -9,4 +9,5 @@ func trackerRoutes(e *echo.Group, s *api.Server) {
 	trackers := e.Group("/trackers")
 
 	trackers.POST("/new", s.AddTracker)
+	trackers.PATCH("/edit/:id", s.EditTracker)
 }
