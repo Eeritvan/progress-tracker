@@ -10,4 +10,5 @@ func authRoutes(e *echo.Group, s *api.Server) {
 
 	auth.POST("/login", s.Login)
 	auth.POST("/signup", s.Signup)
+	auth.POST("/logout", s.Logout)
 }

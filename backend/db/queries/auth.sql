@@ -3,7 +3,6 @@ SELECT id, name, password_hash
 FROM Users
 WHERE name = $1;
 
-
 -- name: Signup :one
 INSERT INTO Users (name, password_hash)
 VALUES ($1, $2)

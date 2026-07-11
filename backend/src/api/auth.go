@@ -71,3 +71,11 @@ func (s *Server) Signup(c *echo.Context) error {
 
 	return c.JSON(http.StatusCreated, queryRes)
 }
+
+// /auth/logout
+func (s *Server) Logout(c *echo.Context) error {
+	jwtCookie := utils.DeleteJWTCookie()
+	c.SetCookie(jwtCookie)
+
+	return c.NoContent(http.StatusNoContent)
+}
