@@ -59,3 +59,23 @@ func (s *Server) EditTracker(c *echo.Context) error {
 
 	return c.JSON(http.StatusOK, queryResp)
 }
+
+// (DELETE /trackers/:id)
+func (s *Server) DeleteTracker(c *echo.Context) error {
+	trackerId, err := echo.PathParam[uuid.UUID](c, "id")
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, nil)
+	}
+
+	userId := c.Get("userId").(uuid.UUID)
+
+	ctx := c.Request().Context()
+	if err := s.queries.DeleteTracker(ctx, sqlc.DeleteTrackerParams{
+		ID:      trackerId,
+		OwnerID: userId,
+	}); err != nil {
+		return c.JSON(http.StatusInternalServerError, nil)
+	}
+
+	return c.NoContent(http.StatusNoContent)
+}

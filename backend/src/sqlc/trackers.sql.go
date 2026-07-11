@@ -35,12 +35,29 @@ func (q *Queries) AddTracker(ctx context.Context, arg AddTrackerParams) (Tracker
 	return i, err
 }
 
+const deleteTracker = `-- name: DeleteTracker :exec
+DELETE FROM trackers
+WHERE id = $1
+  AND owner_id = $2
+`
+
+type DeleteTrackerParams struct {
+	ID      uuid.UUID
+	OwnerID uuid.UUID
+}
+
+func (q *Queries) DeleteTracker(ctx context.Context, arg DeleteTrackerParams) error {
+	_, err := q.db.Exec(ctx, deleteTracker, arg.ID, arg.OwnerID)
+	return err
+}
+
 const editTracker = `-- name: EditTracker :one
 UPDATE trackers
 SET
     title = COALESCE($3, title),
     description = COALESCE($4, description)
-WHERE id = $1 AND owner_id = $2
+WHERE id = $1
+  AND owner_id = $2
 RETURNING id, owner_id, title, description
 `
 

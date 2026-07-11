@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// /auth/login
+// (POST /auth/login)
 func (s *Server) Login(c *echo.Context) error {
 	body := new(models.Login)
 	if err := c.Bind(&body); err != nil {
@@ -39,7 +39,7 @@ func (s *Server) Login(c *echo.Context) error {
 	return c.JSON(http.StatusOK, queryRes)
 }
 
-// /auth/signup
+// (POST /auth/signup)
 func (s *Server) Signup(c *echo.Context) error {
 	body := new(models.Signup)
 	if err := c.Bind(&body); err != nil {
@@ -72,7 +72,7 @@ func (s *Server) Signup(c *echo.Context) error {
 	return c.JSON(http.StatusCreated, queryRes)
 }
 
-// /auth/logout
+// (POST /auth/logout)
 func (s *Server) Logout(c *echo.Context) error {
 	jwtCookie := utils.DeleteJWTCookie()
 	c.SetCookie(jwtCookie)
