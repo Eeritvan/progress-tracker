@@ -5,6 +5,8 @@
 package sqlc
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -13,6 +15,11 @@ type Tracker struct {
 	OwnerID     uuid.UUID
 	Title       string
 	Description *string
+}
+
+type TrackerCompletion struct {
+	TrackerID   uuid.UUID
+	CompletedOn time.Time
 }
 
 type User struct {

@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/eeritvan/progress-tracker/src/models"
 	"github.com/eeritvan/progress-tracker/src/sqlc"
@@ -11,7 +12,7 @@ import (
 )
 
 // (GET /trackers)
-func (s *Server) GetTracker(c *echo.Context) error {
+func (s *Server) GetTrackers(c *echo.Context) error {
 	userId := c.Get("userId").(uuid.UUID)
 
 	ctx := c.Request().Context()
@@ -68,6 +69,56 @@ func (s *Server) EditTracker(c *echo.Context) error {
 	})
 
 	return c.JSON(http.StatusOK, queryResp)
+}
+
+// (POST /trackers/:id/complete)
+func (s *Server) AddTrackerCompletion(c *echo.Context) error {
+	// userId := c.Get("userId").(uuid.UUID)
+	trackerId, _ := echo.PathParam[uuid.UUID](c, "id")
+
+	body := new(models.EditTracker)
+	if err := c.Bind(&body); err != nil {
+		return c.JSON(http.StatusBadRequest, nil)
+	}
+
+	if err := c.Validate(body); err != nil {
+		return c.JSON(http.StatusBadRequest, nil)
+	}
+
+	// todo: check permissions
+
+	now := time.Now()
+	ctx := c.Request().Context()
+	s.queries.AddTrackerCompletion(ctx, sqlc.AddTrackerCompletionParams{
+		TrackerID:   trackerId,
+		CompletedOn: now,
+	})
+
+	return c.JSON(http.StatusOK, nil)
+}
+
+// (DELETE /trackers/:id/completion)
+func (s *Server) DeleteTrackerCompletion(c *echo.Context) error {
+	// userId := c.Get("userId").(uuid.UUID)
+	trackerId, _ := echo.PathParam[uuid.UUID](c, "id")
+
+	body := new(models.EditTracker)
+	if err := c.Bind(&body); err != nil {
+		return c.JSON(http.StatusBadRequest, nil)
+	}
+
+	if err := c.Validate(body); err != nil {
+		return c.JSON(http.StatusBadRequest, nil)
+	}
+
+	dateNow := time.Now()
+	ctx := c.Request().Context()
+	s.queries.DeleteTrackerCompletion(ctx, sqlc.DeleteTrackerCompletionParams{
+		TrackerID:   trackerId,
+		CompletedOn: dateNow,
+	})
+
+	return c.JSON(http.StatusOK, nil)
 }
 
 // (DELETE /trackers/:id)

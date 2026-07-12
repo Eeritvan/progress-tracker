@@ -1,7 +1,19 @@
 -- name: GetTracker :many
-SELECT *
-FROM trackers
-WHERE owner_id = $1;
+SELECT
+  t.id,
+  t.owner_id,
+  t.title,
+  t.description,
+  COALESCE(
+    array_agg(tc.completed_on ORDER BY tc.completed_on)
+      FILTER (WHERE tc.completed_on IS NOT NULL),
+    ARRAY[]::date[]
+  ) AS completed_days
+FROM trackers t
+LEFT JOIN tracker_completions tc
+  ON tc.tracker_id = t.id
+WHERE t.owner_id = $1
+GROUP BY t.id, t.owner_id, t.title, t.description;
 
 -- name: AddTracker :one
 INSERT INTO trackers (owner_id, title, description)

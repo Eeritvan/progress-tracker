@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const addTracker = `-- name: AddTracker :one
@@ -86,25 +87,94 @@ func (q *Queries) EditTracker(ctx context.Context, arg EditTrackerParams) (Track
 }
 
 const getTracker = `-- name: GetTracker :many
-SELECT id, owner_id, title, description
-FROM trackers
-WHERE owner_id = $1
+SELECT
+  t.id,
+  t.owner_id,
+  t.title,
+  t.description,
+  COALESCE(
+    array_agg(tc.completed_on ORDER BY tc.completed_on)
+      FILTER (WHERE tc.completed_on IS NOT NULL),
+    ARRAY[]::date[]
+  ) AS completed_days
+FROM trackers t
+LEFT JOIN tracker_completions tc
+  ON tc.tracker_id = t.id
+WHERE t.owner_id = $1
+GROUP BY t.id, t.owner_id, t.title, t.description
 `
 
-func (q *Queries) GetTracker(ctx context.Context, ownerID uuid.UUID) ([]Tracker, error) {
+type GetTrackerRow struct {
+	ID            uuid.UUID
+	OwnerID       uuid.UUID
+	Title         string
+	Description   *string
+	CompletedDays interface{}
+}
+
+func (q *Queries) GetTracker(ctx context.Context, ownerID uuid.UUID) ([]GetTrackerRow, error) {
 	rows, err := q.db.Query(ctx, getTracker, ownerID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Tracker
+	var items []GetTrackerRow
 	for rows.Next() {
-		var i Tracker
+		var i GetTrackerRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.OwnerID,
 			&i.Title,
 			&i.Description,
+			&i.CompletedDays,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getTracker2 = `-- name: GetTracker2 :many
+SELECT
+  t.id,
+  t.owner_id,
+  t.title,
+  t.description,
+  tc.completed_on
+FROM trackers t
+LEFT JOIN tracker_completions tc
+  ON tc.tracker_id = t.id
+WHERE t.owner_id = $1
+ORDER BY t.id, tc.completed_on
+`
+
+type GetTracker2Row struct {
+	ID          uuid.UUID
+	OwnerID     uuid.UUID
+	Title       string
+	Description *string
+	CompletedOn pgtype.Date
+}
+
+func (q *Queries) GetTracker2(ctx context.Context, ownerID uuid.UUID) ([]GetTracker2Row, error) {
+	rows, err := q.db.Query(ctx, getTracker2, ownerID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetTracker2Row
+	for rows.Next() {
+		var i GetTracker2Row
+		if err := rows.Scan(
+			&i.ID,
+			&i.OwnerID,
+			&i.Title,
+			&i.Description,
+			&i.CompletedOn,
 		); err != nil {
 			return nil, err
 		}
