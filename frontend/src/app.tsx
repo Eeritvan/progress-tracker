@@ -1,5 +1,6 @@
 import { Suspense, type Component } from 'solid-js';
 import { A, useLocation } from '@solidjs/router';
+import Modal from './lib/components/Modal';
 
 const App: Component<{ children: Element }> = (props) => {
   const location = useLocation();
@@ -33,6 +34,9 @@ const App: Component<{ children: Element }> = (props) => {
               value={location.pathname}
             />
           </li>
+          <Modal>
+
+          </Modal>
         </ul>
       </nav>
 
