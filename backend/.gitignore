@@ -2,3 +2,4 @@
 !.env.template
 
 tmp/
+dist/

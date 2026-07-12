@@ -22,6 +22,9 @@ start: build
 build: clean
 	GOEXPERIMENT=jsonv2 $(GOBUILD) -o $(BINARY_NAME)
 
+frontend_build:
+	cd ../frontend && npm run build && rm -rf ../backend/dist && mv dist ../backend/dist
+
 clean:
 	rm -f $(binary_name) && rm -rf tmp && rm -rf dist
 

@@ -1,0 +1,18 @@
+dist
+.wrangler
+.output
+app.config.timestamp_*.js
+
+# Environment
+.env
+.env*.local
+
+# dependencies
+/node_modules
+
+# Temp
+gitignore
+
+# System Files
+.DS_Store
+Thumbs.db

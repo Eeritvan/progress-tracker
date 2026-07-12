@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"embed"
 	"fmt"
 	"log"
+	"mime"
 	"os"
 
 	"github.com/eeritvan/progress-tracker/src/api"
@@ -20,6 +22,15 @@ import (
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
 )
+
+//go:embed "dist"
+var dist embed.FS
+
+func init() {
+	_ = mime.AddExtensionType(".css", "text/css; charset=utf-8")
+	_ = mime.AddExtensionType(".js", "application/javascript; charset=utf-8")
+	_ = mime.AddExtensionType(".html", "text/html; charset=utf-8")
+}
 
 func main() {
 	if err := godotenv.Load(".env.local"); err != nil {
@@ -72,6 +83,19 @@ func main() {
 	server := api.NewServer(queries, pool)
 
 	routes.RegisterRoutes(e, server)
+
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{"http://localhost:3000", "http://127.0.0.1:3000"},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowCredentials: true,
+	}))
+
+	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+		HTML5:      true,
+		Root:       "dist",
+		Filesystem: dist,
+	}))
+	e.StaticFS("/", echo.MustSubFS(dist, "dist"))
 
 	port := os.Getenv("PORT")
 	log.Fatal(e.Start("127.0.0.1:" + port))

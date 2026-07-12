@@ -1,0 +1,27 @@
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.2",
+    "solid-devtools": "^0.34.3",
+    "tailwindcss": "^4.3.2",
+    "vite": "^8.1.4",
+    "vite-plugin-solid": "^2.11.12"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.16.1",
+    "@tanstack/solid-form": "^1.33.1",
+    "solid-js": "^1.9.14"
+  },
+  "overrides": {
+    "vite": "^8.1.4"
+  }
+}
