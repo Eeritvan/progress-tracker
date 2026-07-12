@@ -17,11 +17,15 @@ export const routes: RouteDefinition[] = [
     path: '/register',
     component: lazy(() => import('./modules/register')),
   },
-  // {
-  //   path: '/about',
-  //   component: lazy(() => import('./pages/about')),
-  //   data: AboutData,
-  // },
+  {
+    path: '/trackers',
+    component: lazy(() => import('./modules/trackers')),
+  },
+  {
+    path: '/about',
+    component: lazy(() => import('./pages/about')),
+    preload: AboutData,
+  },
   {
     path: '**',
     component: lazy(() => import('./errors/404')),

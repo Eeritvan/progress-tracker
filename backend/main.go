@@ -51,6 +51,12 @@ func main() {
 		Validator: validator.New(validator.WithRequiredStructEnabled()),
 	}
 
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{"http://localhost:3000", "http://127.0.0.1:3000"},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowCredentials: true,
+	}))
+
 	JWTkey := os.Getenv("JWT_KEY")
 	e.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey:  []byte(JWTkey),
@@ -83,12 +89,6 @@ func main() {
 	server := api.NewServer(queries, pool)
 
 	routes.RegisterRoutes(e, server)
-
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     []string{"http://localhost:3000", "http://127.0.0.1:3000"},
-		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-		AllowCredentials: true,
-	}))
 
 	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
 		HTML5:      true,
