@@ -25,6 +25,8 @@ build: clean
 clean:
 	rm -f $(binary_name) && rm -rf tmp && rm -rf dist
 
+test:
+	go test ./tests
 
 # sqlc
 sqlc: sqlc-vet
