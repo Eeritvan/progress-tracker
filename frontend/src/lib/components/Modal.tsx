@@ -1,21 +1,37 @@
-import { Component } from "solid-js";
+import { createEffect, type ParentComponent } from 'solid-js';
 
-const Modal: Component = () => {
-  let myElement: HTMLDialogElement | undefined;
+type ModalProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
+const Modal: ParentComponent<ModalProps> = (props) => {
+  let dialogElement: HTMLDialogElement | undefined;
+
+  createEffect(() => {
+    if (!dialogElement) {
+      return;
+    }
+
+    if (props.open && !dialogElement.open) {
+      dialogElement.showModal();
+    }
+
+    if (!props.open && dialogElement.open) {
+      dialogElement.close();
+    }
+  });
 
   return (
-    <>
-      <button onClick={() => myElement?.showModal()}>
-        press here
-      </button>
-
-      <dialog
-        class="m-auto backdrop:bg-black/80 rounded-2xl w-170"
-        ref={(el) => (myElement = el)}
-      >
-        hello
-      </dialog>
-    </>
+    <dialog
+      class="m-auto backdrop:bg-black/80 rounded-2xl w-170"
+      onClose={props.onClose}
+      ref={(el) => (dialogElement = el)}
+    >
+      <div>
+        {props.children}
+      </div>
+    </dialog>
   );
 };
 

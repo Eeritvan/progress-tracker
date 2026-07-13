@@ -1,9 +1,10 @@
-import { Suspense, type Component } from 'solid-js';
+import { Suspense, createSignal, type Component } from 'solid-js';
 import { A, useLocation } from '@solidjs/router';
 import Modal from './lib/components/Modal';
 
 const App: Component<{ children: Element }> = (props) => {
   const location = useLocation();
+  const [isModalOpen, setIsModalOpen] = createSignal(false);
 
   return (
     <>
@@ -34,8 +35,14 @@ const App: Component<{ children: Element }> = (props) => {
               value={location.pathname}
             />
           </li>
-          <Modal>
 
+          <button
+            onClick={() => setIsModalOpen(true)}
+          >
+            presss here
+          </button>
+          <Modal open={isModalOpen()} onClose={() => setIsModalOpen(false)}>
+            hello
           </Modal>
         </ul>
       </nav>
