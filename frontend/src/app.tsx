@@ -1,13 +1,14 @@
 import { Suspense, createSignal, type Component } from 'solid-js';
 import { A, useLocation } from '@solidjs/router';
 import Modal from './lib/components/Modal';
+import { ThemeContext } from './context/theme';
 
 const App: Component<{ children: Element }> = (props) => {
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = createSignal(false);
 
   return (
-    <>
+    <ThemeContext.Provider value='light'>
       <nav class="bg-gray-200 text-gray-900 px-4">
         <ul class="flex items-center">
           <li class="py-2 px-4">
@@ -23,6 +24,18 @@ const App: Component<{ children: Element }> = (props) => {
           <li class="py-2 px-4">
             <A href="/error" class="no-underline hover:underline">
               Error
+            </A>
+          </li>
+
+          <li class="py-2 px-4">
+            <A href="/trackers" class="no-underline hover:underline">
+              trackers
+            </A>
+          </li>
+
+          <li class="py-2 px-4">
+            <A href="/trackers2" class="no-underline hover:underline">
+              tracker2
             </A>
           </li>
 
@@ -50,7 +63,7 @@ const App: Component<{ children: Element }> = (props) => {
       <main>
         <Suspense>{props.children}</Suspense>
       </main>
-    </>
+    </ThemeContext.Provider>
   );
 };
 
