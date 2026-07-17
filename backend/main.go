@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"log"
 	"mime"
+	"net/http"
 	"os"
+	"strings"
 
 	"github.com/eeritvan/progress-tracker/src/api"
 	"github.com/eeritvan/progress-tracker/src/routes"
@@ -71,13 +73,22 @@ func main() {
 				// TODO: errro handling
 				return nil
 			}
-			c.Set("userId", uid)
+			c.Set(utils.UserIDContextKey, uid)
 
 			return nil
 		},
+		ErrorHandler: func(c *echo.Context, err error) error {
+			if strings.HasPrefix(c.Path(), "/api") {
+				return c.JSON(http.StatusUnauthorized, map[string]string{
+					"message": echojwt.ErrJWTInvalid.Message,
+				})
+			}
+			return nil
+		},
+		ContinueOnIgnoredError: true,
 		Skipper: func(c *echo.Context) bool {
 			switch c.Path() {
-			case "/*", "/api/auth/signup", "/api/auth/login":
+			case "/api/auth/signup", "/api/auth/login":
 				return true
 			}
 			return false
@@ -88,14 +99,7 @@ func main() {
 
 	server := api.NewServer(queries, pool)
 
-	routes.RegisterRoutes(e, server)
-
-	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
-		HTML5:      true,
-		Root:       "dist",
-		Filesystem: dist,
-	}))
-	e.StaticFS("/", echo.MustSubFS(dist, "dist"))
+	routes.RegisterRoutes(e, server, dist)
 
 	port := os.Getenv("PORT")
 	log.Fatal(e.Start("127.0.0.1:" + port))

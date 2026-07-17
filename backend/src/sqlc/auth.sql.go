@@ -11,6 +11,24 @@ import (
 	"github.com/google/uuid"
 )
 
+const getUserInfo = `-- name: GetUserInfo :one
+SELECT id, name
+FROM users
+WHERE id = $1
+`
+
+type GetUserInfoRow struct {
+	ID   uuid.UUID
+	Name string
+}
+
+func (q *Queries) GetUserInfo(ctx context.Context, id uuid.UUID) (GetUserInfoRow, error) {
+	row := q.db.QueryRow(ctx, getUserInfo, id)
+	var i GetUserInfoRow
+	err := row.Scan(&i.ID, &i.Name)
+	return i, err
+}
+
 const login = `-- name: Login :one
 SELECT id, name, password_hash
 FROM users

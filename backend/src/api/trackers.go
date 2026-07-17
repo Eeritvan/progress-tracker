@@ -1,19 +1,22 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/eeritvan/progress-tracker/src/models"
 	"github.com/eeritvan/progress-tracker/src/sqlc"
+	"github.com/eeritvan/progress-tracker/src/utils"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v5"
 )
 
 // (GET /trackers)
 func (s *Server) GetTrackers(c *echo.Context) error {
-	userId := c.Get("userId").(uuid.UUID)
+	userId, err := utils.GetUserID(c)
+	if err != nil {
+		return nil
+	}
 
 	ctx := c.Request().Context()
 	queryResp, _ := s.queries.GetTracker(ctx, userId)
@@ -23,16 +26,17 @@ func (s *Server) GetTrackers(c *echo.Context) error {
 
 // (POST /trackers/new)
 func (s *Server) AddTracker(c *echo.Context) error {
-	userId := c.Get("userId").(uuid.UUID)
+	userId, err := utils.GetUserID(c)
+	if err != nil {
+		return nil
+	}
 
 	body := new(models.AddTracker)
 	if err := c.Bind(&body); err != nil {
-		fmt.Println(err)
 		return c.JSON(http.StatusBadRequest, nil)
 	}
 
 	if err := c.Validate(body); err != nil {
-		fmt.Println(err)
 		return c.JSON(http.StatusBadRequest, nil)
 	}
 
@@ -48,7 +52,11 @@ func (s *Server) AddTracker(c *echo.Context) error {
 
 // (PATCH /trackers/edit/:id)
 func (s *Server) EditTracker(c *echo.Context) error {
-	userId := c.Get("userId").(uuid.UUID)
+	userId, err := utils.GetUserID(c)
+	if err != nil {
+		return nil
+	}
+
 	trackerId, _ := echo.PathParam[uuid.UUID](c, "id")
 
 	body := new(models.EditTracker)
@@ -73,7 +81,11 @@ func (s *Server) EditTracker(c *echo.Context) error {
 
 // (POST /trackers/:id/complete)
 func (s *Server) AddTrackerCompletion(c *echo.Context) error {
-	// userId := c.Get("userId").(uuid.UUID)
+	_, err := utils.GetUserID(c)
+	if err != nil {
+		return nil
+	}
+
 	trackerId, _ := echo.PathParam[uuid.UUID](c, "id")
 
 	body := new(models.EditTracker)
@@ -99,7 +111,11 @@ func (s *Server) AddTrackerCompletion(c *echo.Context) error {
 
 // (DELETE /trackers/:id/completion)
 func (s *Server) DeleteTrackerCompletion(c *echo.Context) error {
-	// userId := c.Get("userId").(uuid.UUID)
+	_, err := utils.GetUserID(c)
+	if err != nil {
+		return nil
+	}
+
 	trackerId, _ := echo.PathParam[uuid.UUID](c, "id")
 
 	body := new(models.EditTracker)
@@ -123,12 +139,15 @@ func (s *Server) DeleteTrackerCompletion(c *echo.Context) error {
 
 // (DELETE /trackers/:id)
 func (s *Server) DeleteTracker(c *echo.Context) error {
+	userId, err := utils.GetUserID(c)
+	if err != nil {
+		return nil
+	}
+
 	trackerId, err := echo.PathParam[uuid.UUID](c, "id")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, nil)
 	}
-
-	userId := c.Get("userId").(uuid.UUID)
 
 	ctx := c.Request().Context()
 	if err := s.queries.DeleteTracker(ctx, sqlc.DeleteTrackerParams{

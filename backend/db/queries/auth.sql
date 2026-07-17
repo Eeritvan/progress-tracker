@@ -7,3 +7,8 @@ WHERE name = $1;
 INSERT INTO users (name, password_hash)
 VALUES ($1, $2)
 RETURNING id, name;
+
+-- name: GetUserInfo :one
+SELECT id, name
+FROM users
+WHERE id = $1;
