@@ -7,6 +7,7 @@ import { render, Suspense } from 'solid-js/web';
 import App from './app';
 import { Router } from '@solidjs/router';
 import { routes } from './routes';
+import { UserContextProvider } from './lib/context/auth';
 
 const root = document.getElementById('root');
 
@@ -17,6 +18,16 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 }
 
 render(
-  () => <Router root={(props) => <App>{props.children}</App>}>{routes}</Router>,
+  () => (
+    <UserContextProvider>
+      <Router root={(props) =>
+        <App>
+          {props.children}
+        </App>}
+      >
+        {routes}
+      </Router>
+    </UserContextProvider>
+  ),
   root,
 );

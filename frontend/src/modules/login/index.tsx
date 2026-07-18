@@ -1,17 +1,10 @@
 import { createForm } from "@tanstack/solid-form"
 import { login } from "./api"
-import { createEffect, useContext } from "solid-js";
-import { ThemeContext } from "../../context/theme";
-import { user, setUser } from "../../context/auth";
+import { useUserContext } from "../../lib/context/auth";
 
 const Login = () => {
-  const theme = useContext(ThemeContext);
-
-  createEffect(() => {
-    console.log("ggs", theme)
-    console.log(user())
-  })
-
+  const { user, setUser } = useUserContext()
+  console.log("user", user())
 
   const form = createForm(() => ({
     defaultValues: {
@@ -27,11 +20,9 @@ const Login = () => {
     <>
       <button onClick={() => setUser({
         id: "ggs0",
-        email: "ggs1",
-        name: "ggs2",
-        avatar: "ggs3"
+        name: "ggs2"
       })}>
-        here
+        change user
       </button>
       <form
         method="post"

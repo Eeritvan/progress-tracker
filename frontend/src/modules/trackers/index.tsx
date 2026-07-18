@@ -22,7 +22,7 @@ export const addTracker = action(async (body: any) => {
 
 const Trackers = () => {
   const testng = AboutData();
-  const addNew =  useAction(addTracker)
+  const addNew = useAction(addTracker)
 
   createEffect(() => {
     console.log(testng());
@@ -35,8 +35,6 @@ const Trackers = () => {
     },
     onSubmit: async ({ value }) => {
       await addNew(value)
-      // await addTracker(value)
-      // console.log(resp)
     },
   }))
 

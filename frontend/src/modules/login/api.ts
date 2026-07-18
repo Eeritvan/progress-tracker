@@ -11,7 +11,6 @@ export const login = async (body: any) => {
   if (!response.ok) {
     throw new Error('ggs');
   }
-  console.log(response)
 
   return response.json();
 };
