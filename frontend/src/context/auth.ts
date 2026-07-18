@@ -1,14 +1,31 @@
-import { createSignal } from "solid-js";
+import { createSignal } from "solid-js"
+import { API_URL } from "../lib/constants";
+
+declare global {
+  interface Window {
+    __USER__?: User;
+  }
+}
 
 export interface User {
   id: string;
-  email: string;
   name: string;
-  avatar?: string;
 }
 
-const [user, setUser] = createSignal<User | null>(null);
+const [user, setUser] = createSignal<User | undefined>(window.__USER__)
 
-const isAuthenticated = () => user() !== null;
+// window.__user__ is empty in dev mode so we need to fetch it separately
+if (import.meta.env.DEV) {
+  const response = await fetch(`${API_URL}/dev/me`, {
+    method: 'GET',
+    credentials: 'include'
+  });
 
-export { user, setUser, isAuthenticated };
+  if (response.ok) {
+    setUser(await response.json())
+  }
+}
+
+const isAuthenticated = () => user() !== null
+
+export { user, setUser, isAuthenticated }
