@@ -1,4 +1,4 @@
-//go:build !dev
+//go:build dev
 
 package routes
 
@@ -16,4 +16,6 @@ func RegisterRoutes(e *echo.Echo, s *api.Server, dist fs.FS) {
 
 	authRoutes(g, s)
 	trackerRoutes(g, s)
+
+	devRoutes(g, s)
 }

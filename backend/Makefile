@@ -5,21 +5,23 @@ GOCMD=go
 GORUN=$(GOCMD) run
 GOBUILD=$(GOCMD) build
 GOTEST=$(GOCMD) test
-BINARY_NAME=calendar
+BINARY_NAME=progress_tracker
 MIGRATIONS_ORIGIN=db/migrations
 SEED_ORIGIN=db/seed
 DB_DRIVER=postgres
+DEV_MODE=true
 
 .PHONY: start build test clean generate
 
-# dev
+
+# development
 dev air:
-	@air
+	@air --build.cmd "go build -tags=dev -o ./tmp/main ."
 
 start: build
 	./$(BINARY_NAME)
 
-build: clean
+build: clean frontend_build
 	GOEXPERIMENT=jsonv2 $(GOBUILD) -o $(BINARY_NAME)
 
 frontend_build:
@@ -30,6 +32,7 @@ clean:
 
 test:
 	go test ./tests
+
 
 # sqlc
 sqlc: sqlc-vet
