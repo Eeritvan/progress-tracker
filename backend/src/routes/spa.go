@@ -26,6 +26,9 @@ func registerSPARoutes(e *echo.Echo, s *api.Server, dist fs.FS) {
 	}
 
 	e.GET("/*", func(c *echo.Context) error {
+		if strings.HasPrefix(c.Request().URL.Path, "/api") {
+			return echo.ErrNotFound
+		}
 		requestPath := strings.TrimPrefix(path.Clean(c.Request().URL.Path), "/")
 		if requestPath != "" && requestPath != "." {
 			if stat, err := fs.Stat(staticFS, requestPath); err == nil && !stat.IsDir() {
