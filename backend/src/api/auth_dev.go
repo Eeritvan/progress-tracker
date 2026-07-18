@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
-// (GET /auth/me)
+// (GET /dev/me)
 func (s *Server) Me(c *echo.Context) error {
 	userId, err := utils.GetUserID(c)
 	if err != nil {
