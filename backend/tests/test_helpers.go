@@ -128,7 +128,7 @@ func setupTestServer(t *testing.T, ctx context.Context, connURI string) (*api.Se
 
 	queries := sqlc.New(pool)
 
-	server := api.NewServer(queries, pool)
+	server := api.NewServer(queries, pool, nil)
 
 	return server, queries
 }

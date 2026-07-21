@@ -16,6 +16,7 @@ func RegisterRoutes(e *echo.Echo, s *api.Server, dist fs.FS) {
 
 	authRoutes(g, s)
 	trackerRoutes(g, s)
+	profileRoutes(g, s)
 
 	devRoutes(g, s)
 }

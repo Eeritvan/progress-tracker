@@ -13,6 +13,7 @@ import (
 	"github.com/eeritvan/progress-tracker/src/api"
 	"github.com/eeritvan/progress-tracker/src/routes"
 	"github.com/eeritvan/progress-tracker/src/sqlc"
+	"github.com/eeritvan/progress-tracker/src/storage"
 	"github.com/eeritvan/progress-tracker/src/utils"
 	"github.com/golang-jwt/jwt/v5"
 
@@ -46,6 +47,7 @@ func main() {
 	}
 
 	queries := sqlc.New(pool)
+	s3Client, err := storage.NewGarageClient()
 
 	e := echo.New()
 
@@ -97,7 +99,7 @@ func main() {
 
 	e.Use(middleware.BodyLimit(524_288)) // 500kb
 
-	server := api.NewServer(queries, pool)
+	server := api.NewServer(queries, pool, s3Client)
 
 	routes.RegisterRoutes(e, server, dist)
 
