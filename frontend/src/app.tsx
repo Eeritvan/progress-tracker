@@ -33,8 +33,8 @@ const App: Component<{ children: Element }> = (props) => {
           </li>
 
           <li class="py-2 px-4">
-            <A href="/trackers2" class="no-underline hover:underline">
-              tracker2
+            <A href="/me" class="no-underline hover:underline">
+              me
             </A>
           </li>
 
@@ -55,6 +55,23 @@ const App: Component<{ children: Element }> = (props) => {
           </button>
           <Modal open={isModalOpen()} onClose={() => setIsModalOpen(false)}>
             hello
+
+            <br />
+            <button>
+              dark
+            </button>
+
+
+            <br />
+            <button>
+              light
+            </button>
+
+
+            <br />
+            <button>
+              auto
+            </button>
           </Modal>
         </ul>
       </nav>

@@ -21,6 +21,10 @@ export const routes: RouteDefinition[] = [
         component: lazy(() => import("./pages/about")),
         preload: AboutData,
       },
+      {
+        path: "/me",
+        component: lazy(() => import("./modules/me")),
+      },
     ],
   },
   {
