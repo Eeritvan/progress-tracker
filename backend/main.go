@@ -15,9 +15,9 @@ import (
 	"github.com/eeritvan/progress-tracker/src/sqlc"
 	"github.com/eeritvan/progress-tracker/src/storage"
 	"github.com/eeritvan/progress-tracker/src/utils"
-	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
@@ -97,7 +97,7 @@ func main() {
 		},
 	}))
 
-	e.Use(middleware.BodyLimit(524_288)) // 500kb
+	e.Use(middleware.BodyLimit(10_485_760)) // 10 MB
 
 	server := api.NewServer(queries, pool, s3Client)
 
