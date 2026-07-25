@@ -49,18 +49,26 @@ func (s *Server) GetProfilePicture(c *echo.Context) error {
 func (s *Server) UploadProfilePicture(c *echo.Context) error {
 	userId, err := utils.GetUserID(c)
 	if err != nil {
+		fmt.Println("1", err)
 		return nil
 	}
+	fmt.Println("here1")
 
 	data, err := io.ReadAll(c.Request().Body)
 	if err != nil {
+		fmt.Println("2", err)
 		return c.JSON(http.StatusInternalServerError, nil)
 	}
 
+	fmt.Println("here2")
+
 	img, _, err := image.Decode(bytes.NewReader(data))
 	if err != nil {
+		fmt.Println("3", err)
 		return echo.NewHTTPError(http.StatusBadRequest, "invalid image")
 	}
+
+	fmt.Println("here3")
 
 	img = imaging.Fill(
 		img,
@@ -70,14 +78,18 @@ func (s *Server) UploadProfilePicture(c *echo.Context) error {
 		imaging.Lanczos,
 	)
 
+	fmt.Println("here4")
+
 	var buf bytes.Buffer
 	if err = avif.Encode(&buf, img, avif.Options{
 		Quality: 60,
 		Speed:   9,
 	}); err != nil {
+		fmt.Println("4", err)
 		return c.JSON(http.StatusInternalServerError, nil)
 	}
 
+	fmt.Println("here5")
 	bucket := os.Getenv("S3_BUCKET")
 	if _, err = s.bucket.PutObject(context.Background(), &s3.PutObjectInput{
 		Bucket:      aws.String(bucket),
@@ -85,8 +97,11 @@ func (s *Server) UploadProfilePicture(c *echo.Context) error {
 		Body:        bytes.NewReader(buf.Bytes()),
 		ContentType: aws.String("image/avif"),
 	}); err != nil {
+		fmt.Println("5", err)
 		return c.JSON(http.StatusInternalServerError, nil)
 	}
+
+	fmt.Println("here6")
 
 	return c.NoContent(http.StatusNoContent)
 }
