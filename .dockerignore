@@ -1,0 +1,20 @@
+# frontend
+frontend/.oxlintrc.json
+frontend/node_modules/
+
+# backend
+backend/Makefile
+backend/sqlc.yaml
+backend/progress-tracker
+backend/tmp/
+backend/db/
+backend/tests/
+
+# common
+työtuntikirjanpito.md
+.dockerignore
+Dockerfile
+**/README.md
+**/.gitignore
+**/.env*
+**/dist/

@@ -104,5 +104,5 @@ func main() {
 	routes.RegisterRoutes(e, server, dist)
 
 	port := os.Getenv("PORT")
-	log.Fatal(e.Start("127.0.0.1:" + port))
+	log.Fatal(e.Start(":" + port))
 }
