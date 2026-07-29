@@ -13,7 +13,7 @@ func CreateJWTCookie(jwtToken string) *http.Cookie {
 		Expires:  time.Now().Add(24 * time.Hour),
 		HttpOnly: true,
 		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: cookieSameSite,
 	}
 }
 
@@ -26,6 +26,6 @@ func DeleteJWTCookie() *http.Cookie {
 		MaxAge:   -1,
 		HttpOnly: true,
 		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: cookieSameSite,
 	}
 }
