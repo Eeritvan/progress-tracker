@@ -39,6 +39,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
+            BUILD_MODE=dev
             GO_VERSION=${{ env.GO_VERSION }}
             ALPINE_VERSION=${{ env.ALPINE_VERSION }}
       - name: Tailscale

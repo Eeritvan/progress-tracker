@@ -27,7 +27,14 @@ COPY --from=frontend-build /app/dist ./dist
 
 RUN adduser -D -H -g '' -u 10001 nonroot
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOEXPERIMENT=jsonv2 go build -ldflags "-w -s -extldflags '-static -Wl,--strip-all,--gc-sections'" -o server
+ARG BUILD_MODE=prod
+RUN if [ "$BUILD_MODE" = "prod" ]; then \
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOEXPERIMENT=jsonv2 \
+        go build -ldflags="-w -s -extldflags '-static -Wl,--strip-all,--gc-sections'" -o server; \
+    else \
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOEXPERIMENT=jsonv2 \
+        go build -tags=dev -ldflags="-w -s -extldflags '-static -Wl,--strip-all,--gc-sections'" -o server; \
+    fi
 
 
 # final stage
