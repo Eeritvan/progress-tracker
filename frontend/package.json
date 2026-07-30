@@ -6,6 +6,7 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
+    "dev:staging": "vite --mode staging",
     "build": "vite build",
     "serve": "vite preview",
     "lint": "oxlint",
