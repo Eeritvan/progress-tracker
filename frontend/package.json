@@ -24,7 +24,10 @@
   "dependencies": {
     "@solidjs/router": "^0.16.1",
     "@tanstack/solid-form": "^1.33.1",
-    "solid-js": "^1.9.14"
+    "lucide-solid": "^1.28.0",
+    "solid-js": "^1.9.14",
+    "solid-transition-group": "^0.3.0",
+    "tailwindcss-motion": "^1.1.1"
   },
   "overrides": {
     "vite": "^8.1.4"

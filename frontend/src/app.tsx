@@ -1,85 +1,14 @@
-import { Suspense, createSignal, type Component } from 'solid-js';
-import { A, useLocation } from '@solidjs/router';
-import Modal from './lib/components/Modal';
+import { Suspense, type Component } from 'solid-js';
+import NavBar from './modules/navbar';
 
 const App: Component<{ children: Element }> = (props) => {
-  const location = useLocation();
-  const [isModalOpen, setIsModalOpen] = createSignal(false);
-
   return (
-    <>
-      <nav class="bg-gray-200 text-gray-900 px-4">
-        <ul class="flex items-center">
-          <li class="py-2 px-4">
-            <A href="/" class="no-underline hover:underline">
-              Home
-            </A>
-          </li>
-          <li class="py-2 px-4">
-            <A href="/about" class="no-underline hover:underline">
-              About
-            </A>
-          </li>
-          <li class="py-2 px-4">
-            <A href="/error" class="no-underline hover:underline">
-              Error
-            </A>
-          </li>
-
-          <li class="py-2 px-4">
-            <A href="/trackers" class="no-underline hover:underline">
-              trackers
-            </A>
-          </li>
-
-          <li class="py-2 px-4">
-            <A href="/me" class="no-underline hover:underline">
-              me
-            </A>
-          </li>
-
-          <li class="text-sm flex items-center space-x-1 ml-auto">
-            <span>URL:</span>
-            <input
-              class="w-75px p-1 bg-white text-sm rounded-lg"
-              type="text"
-              readOnly
-              value={location.pathname}
-            />
-          </li>
-
-          <button
-            onClick={() => setIsModalOpen(true)}
-          >
-            presss here
-          </button>
-          <Modal open={isModalOpen()} onClose={() => setIsModalOpen(false)}>
-            hello
-
-            <br />
-            <button>
-              dark
-            </button>
-
-
-            <br />
-            <button>
-              light
-            </button>
-
-
-            <br />
-            <button>
-              auto
-            </button>
-          </Modal>
-        </ul>
-      </nav>
-
-      <main>
+    <div class="flex min-h-screen">
+      <NavBar />
+      <main class="flex-1 p-6">
         <Suspense>{props.children}</Suspense>
       </main>
-    </>
+    </div>
   );
 };
 
